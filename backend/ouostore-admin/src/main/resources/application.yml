@@ -1,0 +1,35 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/ouostore?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: zackzhangoneouoouostoresecurityorgcsu #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24*7)
+  tokenHead: Bearer  #JWT负载中拿到开头
+
+secure:
+  ignored:
+    urls: #安全路径白名单,后可接以空格分割的请求方法
+      - /swagger-ui.html
+      - /swagger-resources/**
+      - /swagger/**
+      - /**/v2/api-docs
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.ico
+      - /webjars/springfox-swagger-ui/**
+      - /api/v1/admin/oauth/access_token post
+      - /api/v1/admin/users post
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*Mapper.xml
