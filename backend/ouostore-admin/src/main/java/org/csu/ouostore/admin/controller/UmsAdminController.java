@@ -33,7 +33,7 @@ public class UmsAdminController {
 
     @ApiOperation(value = "登入并获取token")
     @PostMapping("/admin/oauth/access_token")
-    public CommonResult signIn(@RequestBody @Validated UmsAdminSignParam umsAdminSignParam) {
+    public CommonResult<JwtDto> signIn(@RequestBody @Validated UmsAdminSignParam umsAdminSignParam) {
         JwtDto dto = adminService.signIn(umsAdminSignParam.getUsername(), umsAdminSignParam.getPassword());
         if (StrUtil.isEmpty(dto.getAccessToken())) {
             return CommonResult.validateFailed("用户名或密码错误");
