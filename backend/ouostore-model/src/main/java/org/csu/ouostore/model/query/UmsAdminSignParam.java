@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
  * 用户登入注册参数
  */
 @Data
-@ApiModel
+@ApiModel(description = "Sign请求参数")
 public class UmsAdminSignParam {
 
     @ApiModelProperty(value = "用户名", required = true)

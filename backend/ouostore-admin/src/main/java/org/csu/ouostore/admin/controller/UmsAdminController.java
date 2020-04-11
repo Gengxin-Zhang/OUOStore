@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = "后台用户管理")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/admin")
 public class UmsAdminController {
 
     @Value("${jwt.tokenHeader}")
@@ -32,7 +32,7 @@ public class UmsAdminController {
     private UmsAdminService adminService;
 
     @ApiOperation(value = "登入并获取token")
-    @PostMapping("/admin/oauth/access_token")
+    @PostMapping("/oauth/access_token")
     public CommonResult<JwtDto> signIn(@RequestBody @Validated UmsAdminSignParam umsAdminSignParam) {
         JwtDto dto = adminService.signIn(umsAdminSignParam.getUsername(), umsAdminSignParam.getPassword());
         if (StrUtil.isEmpty(dto.getAccessToken())) {
@@ -42,7 +42,7 @@ public class UmsAdminController {
     }
 
     @ApiOperation(value = "注册并获取token")
-    @PostMapping(value = "/admin/users")
+    @PostMapping(value = "/users")
     public CommonResult<JwtDto> signUp(@RequestBody @Validated UmsAdminSignParam umsAdminParam) {
         JwtDto dto = adminService.signUp(umsAdminParam.getUsername(), umsAdminParam.getPassword());
         if (StrUtil.isEmpty(dto.getAccessToken())) {

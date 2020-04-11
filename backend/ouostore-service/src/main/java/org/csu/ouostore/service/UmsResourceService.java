@@ -1,7 +1,8 @@
 package org.csu.ouostore.service;
 
-import org.csu.ouostore.model.entity.UmsResource;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.csu.ouostore.model.entity.UmsResource;
+import org.csu.ouostore.model.query.UmsResourceCreateParam;
 
 import java.util.List;
 
@@ -19,4 +20,9 @@ public interface UmsResourceService extends IService<UmsResource> {
      * 查询全部资源
      */
     List<UmsResource> listAll();
+
+    /**
+     * 新增资源
+     */
+    boolean create(UmsResourceCreateParam umsResourceCreateParam);
 }

@@ -2,6 +2,7 @@ package org.csu.ouostore.service;
 
 import org.csu.ouostore.model.entity.UmsRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.csu.ouostore.model.query.UmsRoleCreateParam;
 
 /**
  * <p>
@@ -13,4 +14,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UmsRoleService extends IService<UmsRole> {
 
+    /**
+     * 添加角色
+     */
+    boolean create(UmsRoleCreateParam role);
 }

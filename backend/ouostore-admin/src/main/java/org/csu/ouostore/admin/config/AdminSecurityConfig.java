@@ -1,5 +1,6 @@
 package org.csu.ouostore.admin.config;
 
+import cn.hutool.core.util.StrUtil;
 import org.csu.ouostore.model.entity.UmsResource;
 import org.csu.ouostore.security.component.DynamicSecurityService;
 import org.csu.ouostore.security.config.SecurityConfig;
@@ -47,7 +48,9 @@ public class AdminSecurityConfig extends SecurityConfig {
                 Map<String, ConfigAttribute> map = new ConcurrentHashMap<>();
                 List<UmsResource> resourceList = resourceService.listAll();
                 for (UmsResource resource : resourceList) {
-                    map.put(resource.getUrl(), new org.springframework.security.access.SecurityConfig(resource.getId() + ":" + resource.getName()));
+                    if (StrUtil.isNotEmpty(resource.getUrl())) {
+                        map.put(resource.getUrl(), new org.springframework.security.access.SecurityConfig(resource.getId() + ":" + resource.getName()));
+                    }
                 }
                 return map;
             }

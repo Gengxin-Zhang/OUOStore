@@ -1,5 +1,6 @@
 package org.csu.ouostore.security.component;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.URLUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
@@ -26,8 +27,10 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
     }
 
     public void clearDataSource() {
-        configAttributeMap.clear();
-        configAttributeMap = null;
+        if (ObjectUtil.isNotNull(configAttributeMap)) {
+            configAttributeMap.clear();
+            configAttributeMap = null;
+        }
     }
 
     @Override

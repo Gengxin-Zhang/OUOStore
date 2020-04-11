@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 拦截所有异常
+     * 拦截请求体为空异常
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public CommonResult handleMyApiException(HttpMessageNotReadableException e) {

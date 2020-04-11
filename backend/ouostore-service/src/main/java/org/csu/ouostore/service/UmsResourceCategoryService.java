@@ -2,6 +2,7 @@ package org.csu.ouostore.service;
 
 import org.csu.ouostore.model.entity.UmsResourceCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.csu.ouostore.model.query.UmsResourceCategoryCreateParam;
 
 /**
  * <p>
@@ -13,4 +14,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UmsResourceCategoryService extends IService<UmsResourceCategory> {
 
+    /**
+     * 创建资源分类
+     */
+    boolean create(UmsResourceCategoryCreateParam resourceCategoryCreateParam);
 }

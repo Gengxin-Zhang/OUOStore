@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/ouostore?useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/ouostore?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -28,6 +28,7 @@ secure:
       - /webjars/springfox-swagger-ui/**
       - /api/v1/admin/oauth/access_token post
       - /api/v1/admin/users post
+      - /api/v1/**
 
 mybatis-plus:
   configuration:
