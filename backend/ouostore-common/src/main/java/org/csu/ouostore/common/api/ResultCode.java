@@ -9,11 +9,13 @@ import com.baomidou.mybatisplus.extension.api.IErrorCode;
 */
 public enum ResultCode implements IErrorCode {
 
-    SUCCESS(200, "操作成功"),
-    FAILED(500, "操作失败"),
-    VALIDATE_FAILED(404, "参数检验失败"),
+    OK(200, "操作成功"),
+    INTERNAL_SERVER_ERROR(500, "操作失败"),
+    BAD_REQUEST(400, "参数错误"),
     UNAUTHORIZED(401, "暂未登入或token已经过期"),
-    FORBIDDEN(403, "没有相关权限");
+    FORBIDDEN(403, "没有相关权限"),
+    NOT_FOUND(404, "未找到"),
+    ;
 
     private long code;
     private String msg;

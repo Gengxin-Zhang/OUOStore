@@ -26,7 +26,7 @@ public class UmsRoleController {
     @PostMapping("")
     public CommonResult create(@RequestBody UmsRoleCreateParam roleCreateParam) {
         boolean success = roleService.create(roleCreateParam);
-        return success ? CommonResult.success(null, "创建成功") : CommonResult.failed("创建失败,未知错误");
+        return success ? CommonResult.OK(null, "创建成功") : CommonResult.failed("创建失败,未知错误");
     }
 
 }

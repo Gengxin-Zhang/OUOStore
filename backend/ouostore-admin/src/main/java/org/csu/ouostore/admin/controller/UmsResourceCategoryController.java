@@ -26,7 +26,7 @@ public class UmsResourceCategoryController {
     @PostMapping("")
     public CommonResult create(@RequestBody UmsResourceCategoryCreateParam categoryCreateParam) {
         boolean success =  resourceCategoryService.create(categoryCreateParam);
-        return success ? CommonResult.success("创建成功") : CommonResult.failed("创建失败,未知错误");
+        return success ? CommonResult.OK("创建成功") : CommonResult.failed("创建失败,未知错误");
     }
 
 }

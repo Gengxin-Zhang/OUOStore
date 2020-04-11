@@ -38,7 +38,7 @@ public class UmsAdminController {
         if (StrUtil.isEmpty(dto.getAccessToken())) {
             return CommonResult.validateFailed("用户名或密码错误");
         }
-        return CommonResult.success(dto);
+        return CommonResult.OK(dto);
     }
 
     @ApiOperation(value = "注册并获取token")
@@ -48,7 +48,7 @@ public class UmsAdminController {
         if (StrUtil.isEmpty(dto.getAccessToken())) {
             CommonResult.failed("注册失败,未知错误");
         }
-        return CommonResult.success(dto);
+        return CommonResult.OK(dto);
     }
 
 }

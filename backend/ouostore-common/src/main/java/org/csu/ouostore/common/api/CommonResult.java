@@ -29,8 +29,8 @@ public class CommonResult<T> {
      *
      * @param data 获取的数据
      */
-    public static <T> CommonResult<T> success(T data) {
-        return new CommonResult<T>(true, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), data);
+    public static <T> CommonResult<T> OK(T data) {
+        return new CommonResult<T>(true, ResultCode.OK.getCode(), ResultCode.OK.getMsg(), data);
     }
 
     /**
@@ -39,8 +39,8 @@ public class CommonResult<T> {
      * @param data 获取的数据
      * @param  msg 提示信息
      */
-    public static <T> CommonResult<T> success(T data, String msg) {
-        return new CommonResult<T>(true, ResultCode.SUCCESS.getCode(), msg, data);
+    public static <T> CommonResult<T> OK(T data, String msg) {
+        return new CommonResult<T>(true, ResultCode.OK.getCode(), msg, data);
     }
 
     /**
@@ -65,21 +65,21 @@ public class CommonResult<T> {
      * @param msg 提示信息
      */
     public static <T> CommonResult<T> failed(String msg) {
-        return new CommonResult<T>(false, ResultCode.FAILED.getCode(), msg, null);
+        return new CommonResult<T>(false, ResultCode.INTERNAL_SERVER_ERROR.getCode(), msg, null);
     }
 
     /**
      * 失败返回结果
      */
     public static <T> CommonResult<T> failed() {
-        return failed(ResultCode.FAILED);
+        return failed(ResultCode.INTERNAL_SERVER_ERROR);
     }
 
     /**
      * 参数验证失败返回结果
      */
     public static <T> CommonResult<T> validateFailed() {
-        return failed(ResultCode.VALIDATE_FAILED);
+        return failed(ResultCode.BAD_REQUEST);
     }
 
     /**
@@ -87,7 +87,7 @@ public class CommonResult<T> {
      * @param message 提示信息
      */
     public static <T> CommonResult<T> validateFailed(String message) {
-        return new CommonResult<T>(false, ResultCode.VALIDATE_FAILED.getCode(), message, null);
+        return new CommonResult<T>(false, ResultCode.BAD_REQUEST.getCode(), message, null);
     }
 
     /**
