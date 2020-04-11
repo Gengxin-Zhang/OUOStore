@@ -23,7 +23,7 @@ public class JwtDto {
     @ApiModelProperty(value = "令牌类型", example = "Bearer")
     private String tokenType;
 
-    @ApiModelProperty(value = "有效时间(秒)", example = "3600")
+    @ApiModelProperty(value = "有效时间(秒)", example = "604800")
     private long expiresIn;
 
 }
