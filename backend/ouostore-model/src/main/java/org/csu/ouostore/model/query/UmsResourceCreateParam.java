@@ -21,7 +21,7 @@ public class UmsResourceCreateParam {
     private String name;
 
     @NotBlank(message = "资源URL不能为空")
-    @ApiModelProperty(value = "资源URL", example = "/admin/**", required = true)
+    @ApiModelProperty(value = "资源URL", example = "/api/v1/admin/**", required = true)
     private String url;
 
     @ApiModelProperty(value = "描述", example = "新增,下架商品等操作")

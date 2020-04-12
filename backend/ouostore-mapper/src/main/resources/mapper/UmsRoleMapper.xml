@@ -2,4 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.csu.ouostore.mapper.UmsRoleMapper">
 
+    <select id="selectPageVo" resultType="org.csu.ouostore.model.entity.UmsRole">
+        SELECT * FROM ums_role ${ew.customSqlSegment}
+    </select>
+
+    <select id="getResourceListByRoleId" resultType="org.csu.ouostore.model.entity.UmsResource">
+        SELECT
+            r.id id,
+            r.create_time createTime,
+            r.`name` `name`,
+            r.url url,
+            r.description description,
+            r.category_id categoryId
+        FROM
+            ums_role_resource_relation rrr
+                LEFT JOIN ums_resource r ON rrr.resource_id = r.id
+        WHERE
+            rrr.role_id = #{roleId}
+          AND r.id IS NOT NULL
+        GROUP BY
+            r.id
+    </select>
 </mapper>

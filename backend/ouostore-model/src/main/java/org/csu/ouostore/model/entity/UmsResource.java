@@ -30,19 +30,19 @@ public class UmsResource implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "创建时间", example = "2020-04-11 17:07:14")
     private LocalDateTime createTime;
 
-    @ApiModelProperty(value = "资源名称")
+    @ApiModelProperty(value = "资源名称", example = "商品管理")
     private String name;
 
-    @ApiModelProperty(value = "资源URL")
+    @ApiModelProperty(value = "资源URL", example = "/api/v1/admin/**")
     private String url;
 
-    @ApiModelProperty(value = "描述")
+    @ApiModelProperty(value = "描述", example = "下架商品等操作")
     private String description;
 
-    @ApiModelProperty(value = "资源分类ID")
+    @ApiModelProperty(value = "资源分类ID", example = "1")
     private Long categoryId;
 
 

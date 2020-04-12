@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.csu.ouostore.mapper.UmsResourceMapper">
 
+    <select id="selectPageVo" resultType="org.csu.ouostore.model.entity.UmsResource">
+        SELECT * FROM ums_resource ${ew.customSqlSegment}
+    </select>
 </mapper>
