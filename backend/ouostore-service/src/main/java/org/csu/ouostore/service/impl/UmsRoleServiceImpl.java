@@ -56,7 +56,7 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
         page.setCurrent(roleQueryParam.getPage()).setSize(roleQueryParam.getPerPage());
         QueryWrapper<UmsRole> wrapper = new QueryWrapper<>();
         if (StrUtil.isNotEmpty(roleQueryParam.getNameKeyword())) {
-            wrapper.eq("name", roleQueryParam.getNameKeyword());
+            wrapper.like("name", roleQueryParam.getNameKeyword());
         }
         // 分页返回的对象与传入的对象是同一个
         return roleMapper.selectPageVo(page, wrapper);

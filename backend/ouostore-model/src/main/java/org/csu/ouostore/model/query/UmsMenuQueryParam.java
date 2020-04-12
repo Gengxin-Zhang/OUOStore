@@ -19,7 +19,7 @@ public class UmsMenuQueryParam {
     @ApiModelProperty(value = "指定每页条数,默认20", example = "20")
     private Long perPage = 20L;
 
-    @ApiModelProperty(value = "父级id,顶级父级id为0", example = "1")
+    @ApiModelProperty(value = "父级id,顶级父级id为0", example = "1", hidden = true)
     private String parentId;
 
 }

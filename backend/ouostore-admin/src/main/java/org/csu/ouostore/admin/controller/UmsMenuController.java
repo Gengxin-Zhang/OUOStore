@@ -2,6 +2,7 @@ package org.csu.ouostore.admin.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.csu.ouostore.common.api.CommonResult;
@@ -52,7 +53,7 @@ public class UmsMenuController {
         BeanUtil.copyProperties(menuPatchParam, menu);
         menu.setId(id);
         boolean success = menuService.updateById(menu);
-        return success ? CommonResult.OK("更新成功") : CommonResult.failed("更新失败,未知错误");
+        return success ? CommonResult.OK("更新成功") : CommonResult.failed("id不存在");
     }
 
     @ApiOperation("根据ID获取菜单详情")
@@ -69,18 +70,20 @@ public class UmsMenuController {
         return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,id不存在");
     }
 
-//    @ApiOperation("分页查询后台菜单")
-//    @GetMapping("")
-//    public CommonResult<List<UmsMenuNode>> query(UmsMenuQueryParam menuQueryParam) {
-//        List<UmsMenuNode> list = menuService.treeList();
-//        return CommonResult.OK(list);
-//    }
-
     @ApiOperation("树形结构返回所有菜单列表")
     @GetMapping("")
     public CommonResult<List<UmsMenuNode>> queryAll() {
         List<UmsMenuNode> list = menuService.treeList();
         return CommonResult.OK(list);
+    }
+
+    @ApiOperation("分页查询指定parent菜单列表")
+    @GetMapping("/parents/{id}")
+    public CommonResult<Page<UmsMenu>> query(@PathVariable String id ,UmsMenuQueryParam menuQueryParam) {
+        menuQueryParam.setParentId(id);
+        Page<UmsMenu> menuPage = new Page<>();
+        menuService. selectMenuPage(menuPage, menuQueryParam);
+        return CommonResult.OK(menuPage);
     }
 
 }

@@ -3,14 +3,18 @@ package org.csu.ouostore.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.csu.ouostore.common.exception.ApiException;
 import org.csu.ouostore.mapper.UmsMenuMapper;
 import org.csu.ouostore.model.entity.UmsMenu;
 import org.csu.ouostore.model.query.UmsMenuCreateParam;
+import org.csu.ouostore.model.query.UmsMenuQueryParam;
 import org.csu.ouostore.model.vo.UmsMenuNode;
 import org.csu.ouostore.service.UmsMenuService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,13 +32,16 @@ import java.util.stream.Collectors;
 @Service
 public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> implements UmsMenuService {
 
+    @Autowired
+    UmsMenuMapper menuMapper;
+
     @Override
     public boolean create(UmsMenuCreateParam menuCreateParam) {
         UmsMenu menu = new UmsMenu();
         BeanUtil.copyProperties(menuCreateParam, menu);
         boolean parentExist = ObjectUtil.isNotNull(menuCreateParam.getParentId());
         //检查父级id是否正确
-        if (parentExist) {
+        if (parentExist && menuCreateParam.getParentId() != 0) {
             UmsMenu parent = this.getOne(new QueryWrapper<UmsMenu>().eq("id", menuCreateParam.getParentId()));
             if (ObjectUtil.isNull(parent)) {
                 throw new ApiException("父级id不存在!");
@@ -45,7 +52,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
         }
         //检查title是否重复
         UmsMenu one = this.getOne(new QueryWrapper<UmsMenu>().eq("title", menuCreateParam.getTitle()).last("LIMIT 1"));
-        if (ObjectUtil.isNull(one)) {
+        if (ObjectUtil.isNotNull(one)) {
             throw new ApiException("title重复");
         }
         //检查url是否重复
@@ -56,12 +63,21 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
             wrapper.eq("parent_id", menuCreateParam.getParentId());
         }
         one = this.getOne(wrapper);
-        if (ObjectUtil.isNull(one)) {
+        if (ObjectUtil.isNotNull(one)) {
             throw new ApiException("已存在此url且父级url相同");
         }
 
         menu.setCreateTime(LocalDateTime.now());
         return this.save(menu);
+    }
+
+    @Override
+    public IPage<UmsMenu> selectMenuPage(Page<UmsMenu> page, UmsMenuQueryParam menuQueryParam) {
+        QueryWrapper<UmsMenu> wrapper = new QueryWrapper<UmsMenu>().eq("parent_id", menuQueryParam.getParentId());
+        page.setCurrent(menuQueryParam.getPage());
+        page.setSize(menuQueryParam.getPerPage());
+        menuMapper.selectPageVo(page, wrapper);
+        return page;
     }
 
     @Override

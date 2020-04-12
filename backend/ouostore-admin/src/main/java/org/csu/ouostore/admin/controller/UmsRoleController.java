@@ -80,7 +80,6 @@ public class UmsRoleController {
     @ApiOperation("获取角色相关资源")
     @GetMapping("/{id}/resources")
     public CommonResult<List<UmsResource>> queryResourcesByRoleId(@PathVariable Long id) {
-
         List<UmsResource> resourceList = roleService.listResource(id);
         return CommonResult.OK(resourceList);
     }

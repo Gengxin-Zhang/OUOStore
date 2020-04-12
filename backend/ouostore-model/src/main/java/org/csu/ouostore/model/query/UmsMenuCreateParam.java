@@ -15,17 +15,17 @@ import javax.validation.constraints.NotBlank;
 @ApiModel(description="新建菜单参数")
 public class UmsMenuCreateParam {
 
-    @ApiModelProperty(value = "父级ID", example = "权限")
+    @ApiModelProperty(value = "父级ID,默认0", example = "0")
     private Long parentId = 0L;
 
-    @ApiModelProperty(value = "菜单名称", example = "用户列表")
+    @ApiModelProperty(value = "菜单名称,前端显示", example = "权限", required = true)
     @NotBlank(message = "menu名称不能为空")
     private String title;
 
     @ApiModelProperty(value = "菜单排序", example = "0")
     private Integer sort = 0;
 
-    @ApiModelProperty(value = "前端url名称", example = "ums")
+    @ApiModelProperty(value = "前端url,每级以//分割", example = "ums", required = true)
     @NotBlank(message = "前端url名称不能为空")
     private String name;
 
