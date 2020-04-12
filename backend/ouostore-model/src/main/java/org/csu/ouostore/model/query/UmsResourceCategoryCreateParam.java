@@ -23,5 +23,4 @@ public class UmsResourceCategoryCreateParam {
     @ApiModelProperty(value = "排序", example = "1")
     private Integer sort;
 
-
 }

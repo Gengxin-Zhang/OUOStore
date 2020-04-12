@@ -18,6 +18,26 @@
     </properties>
 
     <dependencies>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-mapper</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-service</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-model</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-security</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-common</artifactId>
+            </dependency>
     </dependencies>
 
 </project>

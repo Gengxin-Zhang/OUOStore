@@ -48,5 +48,4 @@ public interface UmsAdminService extends IService<UmsAdmin> {
      * @return 生成的JWT的token
      */
     JwtDto signUp(String username, String password);
-
 }

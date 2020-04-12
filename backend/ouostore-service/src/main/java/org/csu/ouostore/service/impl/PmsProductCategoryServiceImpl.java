@@ -6,6 +6,8 @@ import org.csu.ouostore.service.PmsProductCategoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 宠物一级分类,猫/狗/兔子... 服务实现类
@@ -17,4 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PmsProductCategoryServiceImpl extends ServiceImpl<PmsProductCategoryMapper, PmsProductCategory> implements PmsProductCategoryService {
 
+    @Override
+    public List<PmsProductCategory> categoryList() {
+        List<PmsProductCategory> list = this.list();
+        return list;
+    }
 }

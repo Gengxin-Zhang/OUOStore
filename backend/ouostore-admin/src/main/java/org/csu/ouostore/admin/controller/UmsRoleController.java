@@ -86,7 +86,7 @@ public class UmsRoleController {
     }
 
     @ApiOperation("给角色分配资源")
-    @PostMapping("/{id}/resources}")
+    @PostMapping("/{id}/resources")
     public CommonResult allocResource(@PathVariable Long id, @RequestBody Long resourceId) {
         UmsRoleResourceRelation relation = new UmsRoleResourceRelation();
         relation.setResourceId(resourceId);

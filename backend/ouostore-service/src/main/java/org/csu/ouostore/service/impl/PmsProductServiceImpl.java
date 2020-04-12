@@ -6,6 +6,8 @@ import org.csu.ouostore.service.PmsProductService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 商品信息 服务实现类
@@ -16,5 +18,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProduct> implements PmsProductService {
-
+    @Override
+    public List<PmsProduct> productList() {
+        List<PmsProduct> list = this.list();
+        return list;
+    }
 }

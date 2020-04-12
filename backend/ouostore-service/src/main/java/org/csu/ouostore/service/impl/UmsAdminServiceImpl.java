@@ -53,6 +53,7 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     UmsAdminRoleRelationMapper adminRoleRelationMapper;
     @Autowired
     UmsAdminLoginLogService adminLoginLogService;
+
     @Value("${jwt.expiration}")
     private Long expiration;
 
