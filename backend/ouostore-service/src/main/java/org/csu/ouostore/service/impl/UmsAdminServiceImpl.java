@@ -1,8 +1,12 @@
 package org.csu.ouostore.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.csu.ouostore.common.exception.ApiException;
@@ -10,11 +14,13 @@ import org.csu.ouostore.mapper.UmsAdminMapper;
 import org.csu.ouostore.mapper.UmsAdminRoleRelationMapper;
 import org.csu.ouostore.model.bo.AdminUserDetails;
 import org.csu.ouostore.model.dto.JwtDto;
-import org.csu.ouostore.model.entity.UmsAdmin;
-import org.csu.ouostore.model.entity.UmsAdminLoginLog;
-import org.csu.ouostore.model.entity.UmsResource;
+import org.csu.ouostore.model.entity.*;
+import org.csu.ouostore.model.query.UmsAdminSearchParam;
+import org.csu.ouostore.model.query.UmsAdminSignUpParam;
+import org.csu.ouostore.model.vo.UmsAdminVo;
 import org.csu.ouostore.security.util.JwtUtil;
 import org.csu.ouostore.service.UmsAdminLoginLogService;
+import org.csu.ouostore.service.UmsAdminRoleRelationService;
 import org.csu.ouostore.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -52,7 +59,13 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     @Autowired
     UmsAdminRoleRelationMapper adminRoleRelationMapper;
     @Autowired
+    UmsAdminMapper adminMapper;
+    @Autowired
     UmsAdminLoginLogService adminLoginLogService;
+    @Autowired
+    UmsAdminService adminService;
+    @Autowired
+    UmsAdminRoleRelationService adminRoleRelationService;
     @Value("${jwt.expiration}")
     private Long expiration;
 
@@ -105,20 +118,44 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     }
 
     @Override
-    public JwtDto signUp(String username, String password) {
-        List<UmsAdmin> umsAdmins = this.list(new QueryWrapper<UmsAdmin>().eq("username", username));
-        if (umsAdmins.size() > 0) { //已有同名用户
+    public JwtDto signUp(UmsAdminSignUpParam adminSignUpParam) {
+        UmsAdmin one = this.getOne(new QueryWrapper<UmsAdmin>().eq("username", adminSignUpParam).last("limit 1"));
+        if (ObjectUtil.isNotNull(one)) {
             throw new ApiException("用户名重复");
         }
         UmsAdmin umsAdmin = new UmsAdmin();
-        umsAdmin.setUsername(username);
+        BeanUtil.copyProperties(adminSignUpParam, umsAdmin);
         umsAdmin.setCreateTime(LocalDateTime.now());
-        umsAdmin.setStatus(1);
         //将密码进行加密操作
-        String encodePassword = passwordEncoder.encode(password);
+        String encodePassword = passwordEncoder.encode(umsAdmin.getPassword());
         umsAdmin.setPassword(encodePassword);
         this.save(umsAdmin);
-        return signIn(username, password);
+        return signIn(umsAdmin.getUsername(), umsAdmin.getPassword());
+    }
+
+    @Override
+    @Transactional
+    public boolean delete(Long id) {
+        adminService.removeById(id);
+        adminRoleRelationService.remove(new QueryWrapper<UmsAdminRoleRelation>().eq("admin_id", id));
+        return true;
+    }
+
+    @Override
+    public IPage<UmsAdminVo> selectResourcePage(Page<UmsAdminVo> page, UmsAdminSearchParam adminSearchParam) {
+        page.setCurrent(adminSearchParam.getPage());
+        page.setSize(adminSearchParam.getPerPage());
+        QueryWrapper<UmsAdmin> wrapper = new QueryWrapper<UmsAdmin>()
+                .like(StrUtil.isNotBlank(adminSearchParam.getUserNameKeyword()), "username", adminSearchParam.getUserNameKeyword())
+                .like(StrUtil.isNotBlank(adminSearchParam.getNickNameKeyword()), "nick_name", adminSearchParam.getNickNameKeyword())
+                .like(StrUtil.isNotBlank(adminSearchParam.getEmailKeyword()), "email", adminSearchParam.getEmailKeyword());
+        adminMapper.selectPageVo(page, wrapper);
+        return page;
+    }
+
+    @Override
+    public List<UmsRole> getRoleList(Long adminId) {
+        return adminMapper.getRoleList(adminId);
     }
 
     /**
