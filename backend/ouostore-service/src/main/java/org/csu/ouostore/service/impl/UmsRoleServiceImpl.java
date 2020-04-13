@@ -9,16 +9,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.csu.ouostore.common.exception.ApiException;
 import org.csu.ouostore.mapper.UmsRoleMapper;
+import org.csu.ouostore.model.entity.UmsMenu;
 import org.csu.ouostore.model.entity.UmsResource;
 import org.csu.ouostore.model.entity.UmsRole;
 import org.csu.ouostore.model.query.UmsRoleCreateParam;
 import org.csu.ouostore.model.query.UmsRoleQueryParam;
+import org.csu.ouostore.model.vo.UmsMenuNode;
 import org.csu.ouostore.service.UmsRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -65,5 +68,13 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
     @Override
     public List<UmsResource> listResource(Long roleId) {
         return roleMapper.getResourceListByRoleId(roleId);
+    }
+
+    @Override
+    public List<UmsMenuNode> listMenu(Long roleId) {
+        List<UmsMenu> menuList = roleMapper.getMenuListByRoleId(roleId);
+        return menuList.stream()
+                .filter(menu -> menu.getParentId().equals(0L))
+                .map(menu -> UmsMenuServiceImpl.covertMenuNode(menu, menuList)).collect(Collectors.toList());
     }
 }

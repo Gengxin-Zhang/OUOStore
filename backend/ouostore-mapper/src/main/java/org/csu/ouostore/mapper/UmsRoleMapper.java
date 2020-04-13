@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
+import org.csu.ouostore.model.entity.UmsMenu;
 import org.csu.ouostore.model.entity.UmsResource;
 import org.csu.ouostore.model.entity.UmsRole;
 
@@ -33,4 +34,6 @@ public interface UmsRoleMapper extends BaseMapper<UmsRole> {
     IPage<UmsRole> selectPageVo(Page<?> page, @Param(Constants.WRAPPER) Wrapper<UmsRole> wrapper);
 
     List<UmsResource> getResourceListByRoleId(@Param("roleId") Long roleId);
+
+    List<UmsMenu> getMenuListByRoleId(@Param("roleId") Long roleId);
 }

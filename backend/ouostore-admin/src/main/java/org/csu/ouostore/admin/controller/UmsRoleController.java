@@ -6,12 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.csu.ouostore.common.api.CommonResult;
-import org.csu.ouostore.model.entity.UmsResource;
-import org.csu.ouostore.model.entity.UmsRole;
-import org.csu.ouostore.model.entity.UmsRoleResourceRelation;
+import org.csu.ouostore.model.entity.*;
 import org.csu.ouostore.model.query.UmsRoleCreateParam;
 import org.csu.ouostore.model.query.UmsRolePatchParam;
 import org.csu.ouostore.model.query.UmsRoleQueryParam;
+import org.csu.ouostore.model.vo.UmsMenuNode;
+import org.csu.ouostore.service.UmsRoleMenuRelationService;
 import org.csu.ouostore.service.UmsRoleResourceRelationService;
 import org.csu.ouostore.service.UmsRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,8 @@ public class UmsRoleController {
     private UmsRoleService roleService;
     @Autowired
     private UmsRoleResourceRelationService roleResourceRelationService;
+    @Autowired
+    private UmsRoleMenuRelationService roleMenuRelationService;
 
     @ApiOperation("新增一个角色")
     @PostMapping("")
@@ -85,17 +87,43 @@ public class UmsRoleController {
     }
 
     @ApiOperation("给角色分配资源")
-    @PostMapping("/{id}/resources}")
-    public CommonResult allocResource(@PathVariable Long id, @RequestBody Long resourceId) {
-        UmsRoleResourceRelation relation = new UmsRoleResourceRelation();
-        relation.setResourceId(resourceId);
-        relation.setRoleId(id);
-        List<UmsRoleResourceRelation> list = roleResourceRelationService.list(new QueryWrapper<>(relation));
-        if (list.size() < 1) {
-            roleResourceRelationService.save(relation);
-            return CommonResult.OK("分配成功");
-        }
-        return CommonResult.failed("该角色已拥有此资源");
+    @PostMapping("/{roleId}/resources/{resourceId}}")
+    public CommonResult allocResource(@PathVariable Long roleId, @PathVariable Long resourceId) {
+        boolean success = roleResourceRelationService.allocateResource(roleId, resourceId);
+        return success ? CommonResult.OK("分配成功") : CommonResult.failed("分配失败,未知错误");
+    }
+
+    @ApiOperation("删除角色某资源")
+    @DeleteMapping("/{roleId}/resources/{resourceId}")
+    public CommonResult deleteResource(@PathVariable Long roleId, @PathVariable Long resourceId) {
+        boolean success = roleResourceRelationService.remove(
+                new QueryWrapper<UmsRoleResourceRelation>()
+                .eq("role_id", roleId)
+                .eq("resource_id", resourceId));
+        return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,未知错误");
+    }
+
+    @ApiOperation("给角色分配菜单")
+    @PostMapping("/{roleId}/menus/{menuId}")
+    public CommonResult allocMenu(@PathVariable Long roleId, @PathVariable Long menuId) {
+        boolean success = roleMenuRelationService.allocateMenu(roleId, menuId);
+        return success ? CommonResult.OK("分配成功") : CommonResult.failed("分配失败,未知错误");
+    }
+
+    @ApiOperation("树形结构获取角色相关菜单")
+    @GetMapping("/{roleId}/menus")
+    public CommonResult<List<UmsMenuNode>> listMenu(@PathVariable Long roleId) {
+        return CommonResult.OK(roleService.listMenu(roleId));
+    }
+
+    @ApiOperation("删除角色指定菜单")
+    @DeleteMapping("/{roleId}/menus/{menuId}")
+    public CommonResult deleteMenu(@PathVariable Long roleId, @PathVariable Long menuId) {
+        boolean success = roleMenuRelationService.remove(
+                new QueryWrapper<UmsRoleMenuRelation>()
+                        .eq("role_id", roleId)
+                        .eq("menu_id", menuId));
+        return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,未知错误");
     }
 
 }

@@ -91,7 +91,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
     /**
      * 将UmsMenu转化为UmsMenuNode并设置children属性
      */
-    private UmsMenuNode covertMenuNode(UmsMenu menu, List<UmsMenu> menuList) {
+    public static UmsMenuNode covertMenuNode(UmsMenu menu, List<UmsMenu> menuList) {
         UmsMenuNode node = new UmsMenuNode();
         BeanUtils.copyProperties(menu, node);
         List<UmsMenuNode> children = menuList.stream()
