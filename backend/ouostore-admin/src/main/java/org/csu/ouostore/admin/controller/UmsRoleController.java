@@ -66,7 +66,7 @@ public class UmsRoleController {
     @ApiOperation("根据id删除角色")
     @DeleteMapping("/{id}")
     public CommonResult delete(@PathVariable Long id) {
-        boolean success = roleService.removeById(id);
+        boolean success = roleService.delete(id);
         return success ? CommonResult.OK(null, "删除成功") : CommonResult.failed("删除失败,未知错误");
     }
 

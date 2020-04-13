@@ -66,7 +66,7 @@ public class UmsMenuController {
     @ApiOperation("根据ID删除后台菜单")
     @DeleteMapping("/{id}")
     public CommonResult delete(@PathVariable Long id) {
-        boolean success = menuService.removeById(id);
+        boolean success = menuService.delete(id);
         return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,id不存在");
     }
 

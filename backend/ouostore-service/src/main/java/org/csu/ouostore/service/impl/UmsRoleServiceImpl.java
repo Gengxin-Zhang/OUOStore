@@ -9,12 +9,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.csu.ouostore.common.exception.ApiException;
 import org.csu.ouostore.mapper.UmsRoleMapper;
-import org.csu.ouostore.model.entity.UmsMenu;
-import org.csu.ouostore.model.entity.UmsResource;
-import org.csu.ouostore.model.entity.UmsRole;
+import org.csu.ouostore.model.entity.*;
 import org.csu.ouostore.model.query.UmsRoleCreateParam;
 import org.csu.ouostore.model.query.UmsRoleQueryParam;
 import org.csu.ouostore.model.vo.UmsMenuNode;
+import org.csu.ouostore.service.UmsAdminRoleRelationService;
+import org.csu.ouostore.service.UmsRoleMenuRelationService;
+import org.csu.ouostore.service.UmsRoleResourceRelationService;
 import org.csu.ouostore.service.UmsRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,12 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
 
     @Autowired
     UmsRoleMapper roleMapper;
+    @Autowired
+    UmsRoleResourceRelationService roleResourceRelationService;
+    @Autowired
+    UmsRoleMenuRelationService roleMenuRelationService;
+    @Autowired
+    UmsAdminRoleRelationService adminRoleRelationService;
 
     @Override
     public boolean create(UmsRoleCreateParam roleCreateParam) {
@@ -77,4 +84,13 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
                 .filter(menu -> menu.getParentId().equals(0L))
                 .map(menu -> UmsMenuServiceImpl.covertMenuNode(menu, menuList)).collect(Collectors.toList());
     }
+
+    @Override
+    public boolean delete(Long id) {
+        roleResourceRelationService.remove(new QueryWrapper<UmsRoleResourceRelation>().eq("role_id", id));
+        roleMenuRelationService.remove(new QueryWrapper<UmsRoleMenuRelation>().eq("role_id", id));
+        adminRoleRelationService.remove(new QueryWrapper<UmsAdminRoleRelation>().eq("role_id", id));
+        return true;
+    }
+
 }

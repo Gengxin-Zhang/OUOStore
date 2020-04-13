@@ -46,4 +46,9 @@ public interface UmsRoleService extends IService<UmsRole> {
      * 获取角色相关菜单
      */
     List<UmsMenuNode> listMenu(Long roleId);
+
+    /**
+     * 删除角色及相关数据
+     */
+    boolean delete(Long id);
 }

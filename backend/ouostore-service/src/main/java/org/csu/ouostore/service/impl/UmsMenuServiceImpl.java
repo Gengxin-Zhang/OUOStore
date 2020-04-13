@@ -3,22 +3,28 @@ package org.csu.ouostore.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.csu.ouostore.common.exception.ApiException;
 import org.csu.ouostore.mapper.UmsMenuMapper;
 import org.csu.ouostore.model.entity.UmsMenu;
+import org.csu.ouostore.model.entity.UmsRoleMenuRelation;
 import org.csu.ouostore.model.query.UmsMenuCreateParam;
 import org.csu.ouostore.model.query.UmsMenuQueryParam;
 import org.csu.ouostore.model.vo.UmsMenuNode;
 import org.csu.ouostore.service.UmsMenuService;
+import org.csu.ouostore.service.UmsRoleMenuRelationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +40,8 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
 
     @Autowired
     UmsMenuMapper menuMapper;
+    @Autowired
+    UmsRoleMenuRelationService roleMenuRelationService;
 
     @Override
     public boolean create(UmsMenuCreateParam menuCreateParam) {
@@ -78,6 +86,28 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
         page.setSize(menuQueryParam.getPerPage());
         menuMapper.selectPageVo(page, wrapper);
         return page;
+    }
+
+    @Override
+    @Transactional
+    public boolean delete(Long id) {
+        this.removeById(id);
+        roleMenuRelationService.remove(new UpdateWrapper<UmsRoleMenuRelation>().eq("menu_id", id));
+        //递归删除
+        List<UmsMenu> menuList = this.list(new QueryWrapper<UmsMenu>().select("id").eq("parent_id", id));
+        while (menuList.size() != 0) {
+            Set<Long> ids = menuList.stream().map(UmsMenu::getId).collect(Collectors.toSet());
+            this.removeByIds(ids);
+            for (Long i : ids) {
+                roleMenuRelationService.remove(new UpdateWrapper<UmsRoleMenuRelation>().eq("menu_id", i));
+            }
+            ArrayList<UmsMenu> toRemove = new ArrayList<>();
+            for (UmsMenu menu : menuList) {
+                toRemove.addAll(this.list(new QueryWrapper<UmsMenu>().select("id").eq("parent_id", menu.getId())));
+            }
+            menuList = toRemove;
+        }
+        return true;
     }
 
     @Override

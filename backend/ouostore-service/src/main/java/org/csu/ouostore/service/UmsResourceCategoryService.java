@@ -18,4 +18,8 @@ public interface UmsResourceCategoryService extends IService<UmsResourceCategory
      * 创建资源分类
      */
     boolean create(UmsResourceCategoryCreateParam resourceCategoryCreateParam);
+
+    /**
+     * 根据id删除资源及相关数据
+     */
 }

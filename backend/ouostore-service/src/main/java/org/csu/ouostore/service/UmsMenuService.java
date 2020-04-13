@@ -40,4 +40,9 @@ public interface UmsMenuService extends IService<UmsMenu> {
      * @return 分页对象
      */
     IPage<UmsMenu> selectMenuPage(Page<UmsMenu> page, UmsMenuQueryParam menuQueryParam);
+
+    /**
+     * 根据menuId删除menu及相关数据
+     */
+    boolean delete(Long id);
 }
