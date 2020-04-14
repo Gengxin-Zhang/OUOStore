@@ -27,8 +27,8 @@ secure:
       - /**/*.ico
       - /webjars/springfox-swagger-ui/**
       - /api/v1/admin/oauth/access_token post
-      - /api/v1/admin/users post
-      - /api/v1/**
+#      - /api/v1/admin/users post
+#      - /api/v1/**
 
 mybatis-plus:
   configuration:
