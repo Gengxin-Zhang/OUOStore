@@ -119,7 +119,7 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
 
     @Override
     public JwtDto signUp(UmsAdminSignUpParam adminSignUpParam) {
-        UmsAdmin one = this.getOne(new QueryWrapper<UmsAdmin>().eq("username", adminSignUpParam).last("limit 1"));
+        UmsAdmin one = this.getOne(new QueryWrapper<UmsAdmin>().eq("username", adminSignUpParam.getUsername()).last("limit 1"));
         if (ObjectUtil.isNotNull(one)) {
             throw new ApiException("用户名重复");
         }
