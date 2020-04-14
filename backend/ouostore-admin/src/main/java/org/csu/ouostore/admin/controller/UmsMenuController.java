@@ -10,7 +10,7 @@ import org.csu.ouostore.model.entity.UmsMenu;
 import org.csu.ouostore.model.query.UmsMenuCreateParam;
 import org.csu.ouostore.model.query.UmsMenuPatchParam;
 import org.csu.ouostore.model.query.UmsMenuQueryParam;
-import org.csu.ouostore.model.vo.UmsMenuNode;
+import org.csu.ouostore.model.vo.UmsMenuNodeVo;
 import org.csu.ouostore.service.UmsMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -72,8 +72,8 @@ public class UmsMenuController {
 
     @ApiOperation("树形结构返回所有菜单列表")
     @GetMapping("")
-    public CommonResult<List<UmsMenuNode>> queryAll() {
-        List<UmsMenuNode> list = menuService.treeList();
+    public CommonResult<List<UmsMenuNodeVo>> queryAll() {
+        List<UmsMenuNodeVo> list = menuService.treeList();
         return CommonResult.OK(list);
     }
 

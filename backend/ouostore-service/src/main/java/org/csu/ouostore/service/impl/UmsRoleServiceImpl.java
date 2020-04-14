@@ -12,7 +12,7 @@ import org.csu.ouostore.mapper.UmsRoleMapper;
 import org.csu.ouostore.model.entity.*;
 import org.csu.ouostore.model.query.UmsRoleCreateParam;
 import org.csu.ouostore.model.query.UmsRoleQueryParam;
-import org.csu.ouostore.model.vo.UmsMenuNode;
+import org.csu.ouostore.model.vo.UmsMenuNodeVo;
 import org.csu.ouostore.service.UmsAdminRoleRelationService;
 import org.csu.ouostore.service.UmsRoleMenuRelationService;
 import org.csu.ouostore.service.UmsRoleResourceRelationService;
@@ -78,7 +78,7 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
     }
 
     @Override
-    public List<UmsMenuNode> listMenu(Long roleId) {
+    public List<UmsMenuNodeVo> listMenu(Long roleId) {
         List<UmsMenu> menuList = roleMapper.getMenuListByRoleId(roleId);
         return menuList.stream()
                 .filter(menu -> menu.getParentId().equals(0L))

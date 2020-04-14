@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class UmsMenuNode extends UmsMenu {
+public class UmsMenuNodeVo extends UmsMenu {
 
-    private List<UmsMenuNode> children;
+    private List<UmsMenuNodeVo> children;
 }

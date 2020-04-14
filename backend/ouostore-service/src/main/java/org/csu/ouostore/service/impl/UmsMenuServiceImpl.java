@@ -13,7 +13,7 @@ import org.csu.ouostore.model.entity.UmsMenu;
 import org.csu.ouostore.model.entity.UmsRoleMenuRelation;
 import org.csu.ouostore.model.query.UmsMenuCreateParam;
 import org.csu.ouostore.model.query.UmsMenuQueryParam;
-import org.csu.ouostore.model.vo.UmsMenuNode;
+import org.csu.ouostore.model.vo.UmsMenuNodeVo;
 import org.csu.ouostore.service.UmsMenuService;
 import org.csu.ouostore.service.UmsRoleMenuRelationService;
 import org.springframework.beans.BeanUtils;
@@ -111,7 +111,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
     }
 
     @Override
-    public List<UmsMenuNode> treeList() {
+    public List<UmsMenuNodeVo> treeList() {
         List<UmsMenu> menuList = this.list();
         return menuList.stream()
                 .filter(menu -> menu.getParentId().equals(0L))
@@ -121,10 +121,10 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
     /**
      * 将UmsMenu转化为UmsMenuNode并设置children属性
      */
-    public static UmsMenuNode covertMenuNode(UmsMenu menu, List<UmsMenu> menuList) {
-        UmsMenuNode node = new UmsMenuNode();
+    public static UmsMenuNodeVo covertMenuNode(UmsMenu menu, List<UmsMenu> menuList) {
+        UmsMenuNodeVo node = new UmsMenuNodeVo();
         BeanUtils.copyProperties(menu, node);
-        List<UmsMenuNode> children = menuList.stream()
+        List<UmsMenuNodeVo> children = menuList.stream()
                 .filter(subMenu -> subMenu.getParentId().equals(menu.getId()))
                 .map(subMenu -> covertMenuNode(subMenu, menuList)).collect(Collectors.toList());
         node.setChildren(children);

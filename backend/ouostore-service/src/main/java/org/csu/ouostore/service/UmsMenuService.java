@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.csu.ouostore.model.entity.UmsMenu;
 import org.csu.ouostore.model.query.UmsMenuCreateParam;
 import org.csu.ouostore.model.query.UmsMenuQueryParam;
-import org.csu.ouostore.model.vo.UmsMenuNode;
+import org.csu.ouostore.model.vo.UmsMenuNodeVo;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface UmsMenuService extends IService<UmsMenu> {
     /**
      * 树形结构返回所有菜单列表
      */
-    List<UmsMenuNode> treeList();
+    List<UmsMenuNodeVo> treeList();
 
     /**
      * <p>

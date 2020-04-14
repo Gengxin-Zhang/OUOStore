@@ -10,7 +10,7 @@ import org.csu.ouostore.model.entity.*;
 import org.csu.ouostore.model.query.UmsRoleCreateParam;
 import org.csu.ouostore.model.query.UmsRolePatchParam;
 import org.csu.ouostore.model.query.UmsRoleQueryParam;
-import org.csu.ouostore.model.vo.UmsMenuNode;
+import org.csu.ouostore.model.vo.UmsMenuNodeVo;
 import org.csu.ouostore.service.UmsRoleMenuRelationService;
 import org.csu.ouostore.service.UmsRoleResourceRelationService;
 import org.csu.ouostore.service.UmsRoleService;
@@ -112,7 +112,7 @@ public class UmsRoleController {
 
     @ApiOperation("树形结构获取角色相关菜单")
     @GetMapping("/{roleId}/menus")
-    public CommonResult<List<UmsMenuNode>> listMenu(@PathVariable Long roleId) {
+    public CommonResult<List<UmsMenuNodeVo>> listMenu(@PathVariable Long roleId) {
         return CommonResult.OK(roleService.listMenu(roleId));
     }
 
