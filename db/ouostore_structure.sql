@@ -107,6 +107,7 @@ CREATE TABLE `oms_order_item` (
   `product_sku_code` varchar(50) DEFAULT NULL COMMENT '商品sku条码',
   `product_category_id` bigint(20) DEFAULT NULL COMMENT '商品分类id',
   `product_attr` varchar(500) DEFAULT NULL COMMENT '商品销售属性:[{"key":"颜色","value":"颜色"},{"key":"容量","value":"4G"}] 购买时选择的选项',
+  `real_amount` decimal(10,2) DEFAULT NULL COMMENT '商品最终支付价格',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='订单中所包含的商品';
 
