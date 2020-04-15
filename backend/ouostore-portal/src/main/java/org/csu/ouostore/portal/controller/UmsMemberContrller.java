@@ -5,7 +5,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.csu.ouostore.common.api.CommonResult;
 import org.csu.ouostore.model.dto.JwtDto;
-import org.csu.ouostore.model.query.UmsMemberSignParam;
+import org.csu.ouostore.model.query.UmsMemberSignInParam;
+import org.csu.ouostore.model.query.UmsMemberSignUpParam;
 import org.csu.ouostore.service.UmsMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +30,8 @@ public class UmsMemberContrller {
 
     @ApiOperation(value = "登入并获取token")
     @PostMapping("/oauth/access_token")
-    public CommonResult<JwtDto> signIn(@RequestBody @Validated UmsMemberSignParam umsMemberSignParam){
-        JwtDto dto = umsMemberService.signIn(umsMemberSignParam.getUsername(),umsMemberSignParam.getPassword());
+    public CommonResult<JwtDto> signIn(@RequestBody @Validated UmsMemberSignInParam umsMemberSignInParam){
+        JwtDto dto = umsMemberService.signIn(umsMemberSignInParam.getUsername(), umsMemberSignInParam.getPassword());
         if (StrUtil.isEmpty(dto.getAccessToken())) {
             return CommonResult.validateFailed("用户名或密码错误");
         }
@@ -38,13 +39,12 @@ public class UmsMemberContrller {
     }
 
     @ApiOperation(value = "注册并获取token")
-    @PostMapping("/users")
-    public CommonResult<JwtDto> signUp(@RequestBody @Validated UmsMemberSignParam umsMemberSignParam){
-        JwtDto dto = umsMemberService.signUp(umsMemberSignParam.getUsername(), umsMemberSignParam.getPassword());
-        if (StrUtil.isEmpty(dto.getAccessToken())) {
-            CommonResult.failed("注册失败,未知错误");
-        }
-        return CommonResult.OK(dto);
+    @PostMapping("/")
+    public CommonResult<JwtDto> signUp(@RequestBody @Validated UmsMemberSignUpParam signUpParam){
+//        JwtDto dto = umsMemberService.SignUp(signUpParam.getUsername(),signUpParam.getPassword(),signUpParam.getPhone());
+//        if (StrUtil.isEmpty(dto.getAccessToken())) {
+//            CommonResult.failed("注册失败,未知错误");
+//        }
+        return null;
     }
-
 }

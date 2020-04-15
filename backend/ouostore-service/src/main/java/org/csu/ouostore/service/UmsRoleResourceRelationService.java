@@ -13,4 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UmsRoleResourceRelationService extends IService<UmsRoleResourceRelation> {
 
+    /**
+     * 分配资源
+     */
+    boolean allocateResource(Long roleId, Long resourceId);
 }

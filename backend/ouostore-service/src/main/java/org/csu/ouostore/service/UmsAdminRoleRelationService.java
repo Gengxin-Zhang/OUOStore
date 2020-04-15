@@ -12,4 +12,6 @@ import org.csu.ouostore.model.entity.UmsAdminRoleRelation;
  * @since 2020-04-09
  */
 public interface UmsAdminRoleRelationService extends IService<UmsAdminRoleRelation> {
+
+    boolean create(Long adminId, Long roleId);
 }

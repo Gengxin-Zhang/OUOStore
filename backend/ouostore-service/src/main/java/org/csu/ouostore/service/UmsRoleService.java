@@ -7,6 +7,7 @@ import org.csu.ouostore.model.entity.UmsResource;
 import org.csu.ouostore.model.entity.UmsRole;
 import org.csu.ouostore.model.query.UmsRoleCreateParam;
 import org.csu.ouostore.model.query.UmsRoleQueryParam;
+import org.csu.ouostore.model.vo.UmsMenuNodeVo;
 
 import java.util.List;
 
@@ -40,4 +41,14 @@ public interface UmsRoleService extends IService<UmsRole> {
      * 获取角色相关资源
      */
     List<UmsResource> listResource(Long roleId);
+
+    /**
+     * 获取角色相关菜单
+     */
+    List<UmsMenuNodeVo> listMenu(Long roleId);
+
+    /**
+     * 删除角色及相关数据
+     */
+    boolean delete(Long id);
 }

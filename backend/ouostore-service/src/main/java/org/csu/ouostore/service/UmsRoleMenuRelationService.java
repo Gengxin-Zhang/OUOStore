@@ -13,4 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UmsRoleMenuRelationService extends IService<UmsRoleMenuRelation> {
 
+    /**
+     * 分配菜单
+     */
+    boolean allocateMenu(Long roleId, Long menuId);
 }

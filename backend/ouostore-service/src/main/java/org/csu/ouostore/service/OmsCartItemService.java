@@ -2,6 +2,9 @@ package org.csu.ouostore.service;
 
 import org.csu.ouostore.model.entity.OmsCartItem;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.csu.ouostore.model.vo.OmsCartDetailVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OmsCartItemService extends IService<OmsCartItem> {
 
+    /**
+     * 获取购物车详情
+     */
+    OmsCartDetailVo detail(Long memberId);
 }

@@ -20,7 +20,7 @@ public class UmsResourceCategoryCreateParam {
     @ApiModelProperty(value = "分类名称", example = "商品模块", required = true)
     private String name;
 
-    @ApiModelProperty(value = "排序", example = "1")
-    private Integer sort;
+    @ApiModelProperty(value = "排序,默认为0", example = "0")
+    private Integer sort = 0;
 
 }
