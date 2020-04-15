@@ -1,15 +1,18 @@
 package org.csu.ouostore.admin.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.csu.ouostore.common.api.CommonResult;
 import org.csu.ouostore.model.entity.UmsResource;
+import org.csu.ouostore.model.entity.UmsRoleResourceRelation;
 import org.csu.ouostore.model.query.UmsResourceCreateParam;
 import org.csu.ouostore.model.query.UmsResourceQueryParam;
 import org.csu.ouostore.security.component.DynamicSecurityMetadataSource;
 import org.csu.ouostore.service.UmsResourceService;
+import org.csu.ouostore.service.UmsRoleResourceRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,8 @@ public class UmsResourceController {
     private UmsResourceService resourceService;
     @Autowired
     private DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
+    @Autowired
+    private UmsRoleResourceRelationService roleResourceRelationService;
 
     @ApiOperation("新增一个后台资源")
     @PostMapping("")
@@ -51,8 +56,9 @@ public class UmsResourceController {
     @ApiOperation("根据ID删除后台资源")
     @DeleteMapping("/{id}")
     public CommonResult delete(@PathVariable Long id) {
-        boolean success = resourceService.removeById(id);
-        return success ? CommonResult.OK(null, "删除成功") : CommonResult.failed("删除失败,未知错误");
+        resourceService.removeById(id);
+        roleResourceRelationService.remove(new QueryWrapper<UmsRoleResourceRelation>().eq("resource_id", id));
+        return CommonResult.OK("删除成功");
     }
 
     @ApiOperation("根据ID获取资源详情")

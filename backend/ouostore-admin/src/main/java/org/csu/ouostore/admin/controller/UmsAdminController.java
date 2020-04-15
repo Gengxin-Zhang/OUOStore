@@ -1,19 +1,29 @@
 package org.csu.ouostore.admin.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.csu.ouostore.common.api.CommonResult;
+import org.csu.ouostore.common.exception.ApiException;
 import org.csu.ouostore.model.dto.JwtDto;
-import org.csu.ouostore.model.query.UmsAdminSignParam;
+import org.csu.ouostore.model.entity.UmsAdmin;
+import org.csu.ouostore.model.entity.UmsRole;
+import org.csu.ouostore.model.query.UmsAdminSearchParam;
+import org.csu.ouostore.model.query.UmsAdminSignInParam;
+import org.csu.ouostore.model.query.UmsAdminSignUpParam;
+import org.csu.ouostore.model.vo.UmsAdminVo;
+import org.csu.ouostore.service.UmsAdminRoleRelationService;
 import org.csu.ouostore.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -30,11 +40,13 @@ public class UmsAdminController {
     private String tokenHead;
     @Autowired
     private UmsAdminService adminService;
+    @Autowired
+    private UmsAdminRoleRelationService adminRoleRelationService;
 
     @ApiOperation(value = "登入并获取token")
     @PostMapping("/oauth/access_token")
-    public CommonResult<JwtDto> signIn(@RequestBody @Validated UmsAdminSignParam umsAdminSignParam) {
-        JwtDto dto = adminService.signIn(umsAdminSignParam.getUsername(), umsAdminSignParam.getPassword());
+    public CommonResult<JwtDto> signIn(@RequestBody @Validated UmsAdminSignInParam umsAdminSignInParam) {
+        JwtDto dto = adminService.signIn(umsAdminSignInParam.getUsername(), umsAdminSignInParam.getPassword());
         if (StrUtil.isEmpty(dto.getAccessToken())) {
             return CommonResult.validateFailed("用户名或密码错误");
         }
@@ -43,12 +55,62 @@ public class UmsAdminController {
 
     @ApiOperation(value = "注册并获取token")
     @PostMapping(value = "/users")
-    public CommonResult<JwtDto> signUp(@RequestBody @Validated UmsAdminSignParam umsAdminParam) {
-        JwtDto dto = adminService.signUp(umsAdminParam.getUsername(), umsAdminParam.getPassword());
+    public CommonResult<JwtDto> signUp(@RequestBody @Validated UmsAdminSignUpParam adminSignUpParam) {
+        JwtDto dto = adminService.signUp(adminSignUpParam);
         if (StrUtil.isEmpty(dto.getAccessToken())) {
             CommonResult.failed("注册失败,未知错误");
         }
         return CommonResult.OK(dto);
+    }
+
+    @ApiOperation("删除指定后台用户及其相关信息")
+    @DeleteMapping("/users/{id}")
+    public CommonResult<String> delete(@PathVariable Long id) {
+        boolean success = adminService.delete(id);
+        return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,未知原因");
+    }
+
+    @ApiOperation("更新指定后台用户")
+    @PutMapping("/users/{id}")
+    public CommonResult<String> update(@PathVariable Long id, @RequestBody UmsAdminSignUpParam adminSignUpParam) {
+        UmsAdmin admin = new UmsAdmin();
+        BeanUtil.copyProperties(adminSignUpParam, admin);
+        boolean success = adminService.updateById(admin);
+        return success ? CommonResult.OK("更新成功") : CommonResult.failed("id不存在");
+    }
+
+    @ApiOperation("查询指定后台用户详细信息")
+    @GetMapping("/users/{id}")
+    public CommonResult<UmsAdminVo> query(@PathVariable Long id) {
+        UmsAdmin one = adminService.getOne(new QueryWrapper<UmsAdmin>().eq("id", id).last("limit 1"));
+        if (ObjectUtil.isNull(one)) {
+            throw new ApiException("id不存在");
+        }
+        UmsAdminVo vo = new UmsAdminVo();
+        BeanUtil.copyProperties(one, vo);
+        return CommonResult.OK(vo);
+    }
+
+    @ApiOperation("模糊搜索分页获取用户列表")
+    @GetMapping("/users/search")
+    public CommonResult<Page<UmsAdminVo>> search(UmsAdminSearchParam adminSearchParam) {
+        Page<UmsAdminVo> page = new Page<>();
+        adminService.selectResourcePage(page, adminSearchParam);
+        return CommonResult.OK(page);
+    }
+
+    @ApiOperation("给用户分配角色")
+    @PostMapping("/users/{userId}/roles/{roleId}")
+    public CommonResult addRole(@PathVariable("userId") Long userId, @PathVariable("roleId") Long roleId) {
+        boolean success = adminRoleRelationService.create(userId, roleId);
+        return success ? CommonResult.OK("分配成功") : CommonResult.failed("分配失败,未知原因");
+    }
+
+    @ApiOperation("获取指定用户的角色")
+    @GetMapping("/users/{id}/roles")
+    public CommonResult<List<UmsRole>> getRoleList(@PathVariable Long id) {
+        List<UmsRole> roleList = adminService.getRoleList(id);
+        return CommonResult.OK(roleList);
     }
 
 }

@@ -2,6 +2,7 @@ package org.csu.ouostore.admin.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.csu.ouostore.common.api.CommonResult;
@@ -9,7 +10,7 @@ import org.csu.ouostore.model.entity.UmsMenu;
 import org.csu.ouostore.model.query.UmsMenuCreateParam;
 import org.csu.ouostore.model.query.UmsMenuPatchParam;
 import org.csu.ouostore.model.query.UmsMenuQueryParam;
-import org.csu.ouostore.model.vo.UmsMenuNode;
+import org.csu.ouostore.model.vo.UmsMenuNodeVo;
 import org.csu.ouostore.service.UmsMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -52,7 +53,7 @@ public class UmsMenuController {
         BeanUtil.copyProperties(menuPatchParam, menu);
         menu.setId(id);
         boolean success = menuService.updateById(menu);
-        return success ? CommonResult.OK("更新成功") : CommonResult.failed("更新失败,未知错误");
+        return success ? CommonResult.OK("更新成功") : CommonResult.failed("id不存在");
     }
 
     @ApiOperation("根据ID获取菜单详情")
@@ -65,22 +66,24 @@ public class UmsMenuController {
     @ApiOperation("根据ID删除后台菜单")
     @DeleteMapping("/{id}")
     public CommonResult delete(@PathVariable Long id) {
-        boolean success = menuService.removeById(id);
+        boolean success = menuService.delete(id);
         return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,id不存在");
     }
 
-//    @ApiOperation("分页查询后台菜单")
-//    @GetMapping("")
-//    public CommonResult<List<UmsMenuNode>> query(UmsMenuQueryParam menuQueryParam) {
-//        List<UmsMenuNode> list = menuService.treeList();
-//        return CommonResult.OK(list);
-//    }
-
     @ApiOperation("树形结构返回所有菜单列表")
     @GetMapping("")
-    public CommonResult<List<UmsMenuNode>> queryAll() {
-        List<UmsMenuNode> list = menuService.treeList();
+    public CommonResult<List<UmsMenuNodeVo>> queryAll() {
+        List<UmsMenuNodeVo> list = menuService.treeList();
         return CommonResult.OK(list);
+    }
+
+    @ApiOperation("分页查询指定parent菜单列表")
+    @GetMapping("/parents/{id}")
+    public CommonResult<Page<UmsMenu>> query(@PathVariable String id ,UmsMenuQueryParam menuQueryParam) {
+        menuQueryParam.setParentId(id);
+        Page<UmsMenu> menuPage = new Page<>();
+        menuService. selectMenuPage(menuPage, menuQueryParam);
+        return CommonResult.OK(menuPage);
     }
 
 }

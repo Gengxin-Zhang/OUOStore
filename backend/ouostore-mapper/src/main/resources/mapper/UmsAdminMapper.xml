@@ -2,4 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.csu.ouostore.mapper.UmsAdminMapper">
 
+    <select id="selectPageVo" resultType="org.csu.ouostore.model.vo.UmsAdminVo">
+        SELECT * FROM ums_admin ${ew.customSqlSegment}
+    </select>
+    <select id="getRoleList" resultType="org.csu.ouostore.model.entity.UmsRole">
+        select r.*
+        from ums_admin_role_relation ar left join ums_role r on ar.role_id = r.id
+        where ar.admin_id = #{adminId}
+    </select>
 </mapper>
