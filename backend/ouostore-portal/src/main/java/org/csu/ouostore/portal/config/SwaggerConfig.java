@@ -25,7 +25,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.csu.ouostore.admin.controller"))
+                .apis(RequestHandlerSelectors.basePackage("org.csu.ouostore.portal.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(securitySchemes())
@@ -45,8 +45,8 @@ public class SwaggerConfig {
     private List<ApiKey> securitySchemes() {
         //设置请求头信息
         List<ApiKey> result = new ArrayList<>();
-        ApiKey apiKey = new ApiKey("Authorization", "Authorization", "header");
-        result.add(apiKey);
+//        ApiKey apiKey = new ApiKey("Authorization", "Authorization", "header");
+//        result.add(apiKey);
         return result;
     }
 

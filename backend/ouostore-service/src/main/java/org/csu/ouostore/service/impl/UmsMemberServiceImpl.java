@@ -1,23 +1,28 @@
 package org.csu.ouostore.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.csu.ouostore.common.exception.ApiException;
 import org.csu.ouostore.model.bo.MemberDetails;
 import org.csu.ouostore.model.dto.JwtDto;
-import org.csu.ouostore.model.entity.UmsAdmin;
-import org.csu.ouostore.model.entity.UmsAdminLoginLog;
 import org.csu.ouostore.model.entity.UmsMember;
 import org.csu.ouostore.mapper.UmsMemberMapper;
 import org.csu.ouostore.model.entity.UmsMemberLoginLog;
+import org.csu.ouostore.model.query.UmsMemberPatchParam;
 import org.csu.ouostore.security.util.JwtUtil;
+import org.csu.ouostore.service.RedisService;
 import org.csu.ouostore.service.UmsMemberLoginLogService;
 import org.csu.ouostore.service.UmsMemberService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,17 +38,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
- * <p>
- * 会员表 服务实现类
- * </p>
  *
- * @author zack
- * @since 2020-04-09
+ * 会员表 服务实现类
+ *
  */
 @Service
 @Slf4j
@@ -57,7 +60,10 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     UmsMemberLoginLogService umsMemberLoginLogService;
     @Autowired
     UmsMemberMapper memberMapper;
+    @Autowired
+    RedisService redisService;
 
+    private Long AUTH_CODE_EXPIRE_SECONDS = 120L;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -66,6 +72,16 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
             return new MemberDetails(member);
         }
         throw new UsernameNotFoundException("用户名或密码错误");
+//        return null;
+    }
+
+    public UserDetails loadUserByPhone(String phone) {
+        UmsMember member = getByPhone(phone);
+        if (member != null) {
+            return new MemberDetails(member);
+        }
+        throw new UsernameNotFoundException("用户不存在");
+//        return null;
     }
 
     public UmsMember getByPhone(String phoneNumber){
@@ -73,6 +89,7 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
         member.setPhone(phoneNumber);
         List<UmsMember> members = this.list(new QueryWrapper<UmsMember>().eq("phone",phoneNumber));
         if (CollectionUtil.isNotEmpty(members)) {
+            System.out.println(members.get(0));
             return members.get(0);
         }
         return null;
@@ -81,29 +98,64 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     public UmsMember getByUsername(String username) {
         UmsMember member = new UmsMember();
         member.setUsername(username);
-        List<UmsMember> members = this.list(new QueryWrapper<>(member));
+        List<UmsMember> members = this.list(new QueryWrapper<UmsMember>().eq("username", username));
         if (CollectionUtil.isNotEmpty(members)) {
             return members.get(0);
         }
         return null;
     }
 
+//    @Override
+//    public JwtDto signIn(String username, String password){
+//        JwtDto jwtDto = new JwtDto();
+//        //密码需要客户端加密后传递
+//        try {
+//            UserDetails userDetails = loadUserByUsername(username);
+//            if(!passwordEncoder.matches(password,userDetails.getPassword())){
+//                throw new BadCredentialsException("密码不正确");
+//            }
+//            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            String token = jwtUtil.generateToken(userDetails);
+//            jwtDto.setAccessToken(token);
+//            jwtDto.setExpiresIn(jwtUtil.getExpiration());
+//            jwtDto.setTokenType(jwtUtil.getTokenHead());
+//            insertLoginLog(username);
+//        } catch (AuthenticationException e) {
+//            log.warn("登录异常:{}", e.getMessage());
+//        }
+//        return jwtDto;
+//    }
+
+
+    //注册或登录
     @Override
-    public JwtDto signIn(String username, String password){
+    public JwtDto SignUp(String telephone, String authCode) {
         JwtDto jwtDto = new JwtDto();
-        //密码需要客户端加密后传递
+        if (!verifyAuthCode(authCode, telephone)) {
+            System.out.println("验证码错误");
+            throw new BadCredentialsException("验证码错误");
+        }
         try {
-            UserDetails userDetails = loadUserByUsername(username);
-            if(!passwordEncoder.matches(password,userDetails.getPassword())){
-                throw new BadCredentialsException("密码不正确");
+            if (ObjectUtil.isNull(getByPhone(telephone))) {
+                UmsMember umsMember = new UmsMember();
+                umsMember.setPassword(null);
+                umsMember.setUsername(null);
+                umsMember.setPhone(telephone);
+                umsMember.setStatus(1);
+                LocalDateTime now = LocalDateTime.now();
+                umsMember.setCreateTime(now);
+                memberMapper.insert(umsMember);
+
+                System.out.println(umsMember);
+                System.out.println("插入成功");
             }
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = jwtUtil.generateToken(userDetails);
+            UserDetails details = loadUserByPhone(telephone);
+            String token = jwtUtil.generateToken(details);
             jwtDto.setAccessToken(token);
             jwtDto.setExpiresIn(jwtUtil.getExpiration());
             jwtDto.setTokenType(jwtUtil.getTokenHead());
-            insertLoginLog(username);
+            insertLoginLog(details.getUsername());
         } catch (AuthenticationException e) {
             log.warn("登录异常:{}", e.getMessage());
         }
@@ -111,42 +163,49 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     }
 
     @Override
-    public JwtDto SignUp(String username, String password, String telephone, String authCode) {
-        JwtDto jwtDto = new JwtDto();
-        //验证验证码
-        if(!verifyAuthCode(authCode,telephone)){
-//            throw new BadCredentialsException("验证码错误");
-            System.out.println("验证码错误");
+    public boolean patch(UmsMemberPatchParam param) {
+        UmsMember member = BeanUtil.copyProperties(param, UmsMember.class);
+//        String pwd = member.getPassword();
+//        System.out.println(pwd);
+        if (!(member.getPassword() == null)) {
+            System.out.println("进入修改密码");
+            updatePassword(param.getPhone(), param.getPassword(), param.getCode());
+            System.out.println("更新密码");
         }
-        if (ObjectUtil.isNotNull(getByPhone(telephone))){
-//            throw new BadCredentialsException("验证码错误");
-            System.out.println("注册手机号已存在");
-        }
-        if (ObjectUtil.isNotNull(getByUsername(username))){
-            System.out.println("用户名已存在");
-        }
-        UmsMember umsMember = new UmsMember();
-        umsMember.setUsername(username);
-        umsMember.setPhone(telephone);
-        umsMember.setPassword(passwordEncoder.encode(password));
-        umsMember.setStatus(1);
-//        umsMember.setCreateTime(new LocalDateTime());//todo:注册时间
-
-        memberMapper.insert(umsMember);
-        return jwtDto;
-    }
-
-    @Override
-    public UmsMember getById(Long id) {
-        return this.getById(id);
+        memberMapper.update(member, new UpdateWrapper<UmsMember>().eq("id", member.getId()));
+        System.out.println("修改成功");
+        //todo:修改记录
+        return true;
     }
 
     @Override
     public void updatePassword(String telephone, String password, String authCode) {
-
+        UserDetails userDetails = loadUserByPhone(telephone);
+        if (!verifyAuthCode(authCode, telephone)) {
+            System.out.println("验证码错误");
+            throw new BadCredentialsException("验证码错误");
+        }
+        UmsMember member = getByUsername(userDetails.getUsername());
+        member.setPassword(passwordEncoder.encode(password));
+        memberMapper.updateById(member);
     }
 
-
+    //对输入的验证码进行校验
+    private boolean verifyAuthCode(String authCode, String telephone) {
+        if (StringUtils.isEmpty(authCode)) {
+            return false;
+        }
+        String realCode = redisService.get(telephone);
+        if (realCode.equals(authCode)) {
+            return true;
+        }
+        return false;
+    }
+    
+    @Override
+    public UmsMember getById(Long id) {
+        return this.getById(id);
+    }
 
     @Override
     public UmsMember getCurrentMember() {
@@ -156,23 +215,21 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
         return memberDetails.getUmsMember();
     }
 
-    //对输入的验证码进行校验
-    private boolean verifyAuthCode(String authCode, String telephone){
-        if(StringUtils.isEmpty(authCode)){
-            return false;
-        }
-        //todo:验证码校验
-        return false;
-    }
-
+    /**
+     * 随机产生六位验证码
+     */
     @Override
-    public String generateAuthCode(String telephone) {
-        return null;
+    public String generateAuthCode() {
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
+            sb.append(random.nextInt(10));
+        }
+        return sb.toString();
     }
 
     /**
      * 添加登录记录
-     *
      * @param username 用户名
      */
     private void insertLoginLog(String username) {

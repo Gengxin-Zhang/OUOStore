@@ -13,11 +13,14 @@
     <name>ouostore-portal</name>
     <description>portal of OUOStore</description>
 
-<!--    <properties>-->
-<!--        <java.version>8</java.version>-->
-<!--    </properties>-->
 
     <dependencies>
+        <!--redis依赖配置-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!--阿里云验证码服务配置-->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-dysmsapi</artifactId>

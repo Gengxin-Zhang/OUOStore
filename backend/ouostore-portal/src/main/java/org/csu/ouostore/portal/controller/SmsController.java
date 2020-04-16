@@ -1,28 +1,19 @@
 package org.csu.ouostore.portal.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.json.JSON;
-import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsResponse;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.csu.ouostore.common.api.CommonResult;
-import org.csu.ouostore.portal.model.Sms;
-import org.csu.ouostore.portal.model.SmsQuery;
-import org.csu.ouostore.portal.model.SmsSendParam;
-import org.csu.ouostore.portal.service.AliyunSmsSenderService;
+import org.csu.ouostore.model.query.CaptchaQueryParam;
+import org.csu.ouostore.service.AliyunSmsSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Description: 测试发送短信controller
  */
-@Api("短信查询、发送")
+@Api("短信发送")
 @RestController
 public class SmsController {
 
@@ -32,32 +23,14 @@ public class SmsController {
     /**
      * @Description: 短信发送
      */
-    @GetMapping("/sms")
+    @ApiOperation("向手机号发送验证码")
+    @PostMapping("/sms")
     @ResponseBody
-    public CommonResult sms(@RequestBody SmsSendParam param) {
-        Sms sms = BeanUtil.copyProperties(param,Sms.class);
-//        Map<String, String> map = new HashMap<>();
-//        map.put("sellerName", "平台自营");
-//        map.put("orderSn", "P2019041895451");
-////        SendSmsResponse sendSmsResponse = smsSenderService.sendSms("此处填写手机号",
-////                JSON.toJSONString(map),
-////                "此处填写短信模板code");
-        SendSmsResponse sendSmsResponse = smsSenderService.sendSms(sms);
-//        return JSON.toJSONString(sendSmsResponse);
+    public CommonResult sms(@RequestBody CaptchaQueryParam queryParam) throws ClientException {
+        System.out.println(queryParam.getPhone());
+        System.out.println(queryParam.getType());
+        SendSmsResponse sendSmsResponse = smsSenderService.sendSms(queryParam);
         return CommonResult.OK(sendSmsResponse);
     }
 
-    /**
-     * @Description: 短信查询
-     */
-    @GetMapping("/query")
-    @ResponseBody
-    public CommonResult query(@RequestBody SmsSendParam param) {
-        SmsQuery query = BeanUtil.copyProperties(param,SmsQuery.class);
-        QuerySendDetailsResponse querySendDetailsResponse = smsSenderService.querySendDetails(query);
-//        QuerySendDetailsResponse querySendDetailsResponse = smsSenderService.querySendDetails("此处填写发送短信返回的bizId",
-//                "此处填写手机号", 10L, 1L);
-//        return JSON.toJSONString(querySendDetailsResponse);
-        return CommonResult.OK(querySendDetailsResponse);
-    }
 }
