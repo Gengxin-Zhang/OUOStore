@@ -200,6 +200,10 @@ CREATE TABLE `pms_product` (
 -- Records of pms_product
 -- ----------------------------
 BEGIN;
+INSERT INTO `pms_product`(name, product_sn, publish_status, price, description, stock, keywords)
+VALUES ('tutu', 'abc', 1, 99.99, 'good', 200, 'a');
+INSERT INTO `pms_product`(name, product_sn, publish_status, price, description, stock, keywords)
+VALUES ('t', 'abcd', 0, 99.99, 'well', 200, 'ad');
 COMMIT;
 
 -- ----------------------------
@@ -278,6 +282,24 @@ CREATE TABLE `pms_product_category` (
 -- Records of pms_product_category
 -- ----------------------------
 BEGIN;
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("bird", 34, 1)
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("rabbit", 34, 1)
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("dog", 34, 1)
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("cat", 34, 0)
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("reptile", 34, 1)
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("donkey", 34, 0)
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("horse", 34, 1)
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("fish", 34, 1)
+INSERT INTO `pms_product_category`(name, product_count, show_status)
+VALUES ("leopard", 34, 0)
 COMMIT;
 
 -- ----------------------------

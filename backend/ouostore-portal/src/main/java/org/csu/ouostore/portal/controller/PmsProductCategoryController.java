@@ -10,9 +10,7 @@ import org.csu.ouostore.model.query.PmsProductQueryParam;
 import org.csu.ouostore.service.PmsProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,7 +27,8 @@ public class PmsProductCategoryController {
 
     @ApiOperation("分页返回商品目录列表")
     @GetMapping("")
-    public CommonResult<Page<PmsProductCategory>> getCategory(PmsProductCategoryQueryParam queryParam){
+    @ResponseBody
+    public CommonResult<Page<PmsProductCategory>> getCategory(@RequestBody PmsProductCategoryQueryParam queryParam) {
         Page<PmsProductCategory> page = new Page<>();
        productCategoryService.categoryListIPage(page,queryParam);
         return CommonResult.OK(page);
