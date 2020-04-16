@@ -2,4 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.csu.ouostore.mapper.OmsCartItemMapper">
 
+    <select id="list" resultType="org.csu.ouostore.model.bo.CartItemDetail">
+        SELECT
+            o.id,
+	        o.product_id,
+	        o.product_sku_id,
+	        o.member_id,
+	        o.quantity,
+	        o.price,
+	        o.product_pic,
+	        o.product_name,
+	        o.product_sku_code,
+	        o.create_date,
+	        o.modify_date,
+	        o.delete_status,
+	        o.product_category_id,
+	        o.product_sn,
+	        o.product_attr,
+            p.stock - p.lock_stock realStock
+        FROM
+             oms_cart_item o
+                LEFT JOIN pms_sku_stock p ON o.product_sku_id = p.id
+        WHERE o.member_id = #{member_id}
+        <if test="ids != null and ids.size() > 0">
+        and p.id in
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+          AND o.id IS NOT NULL
+        GROUP BY
+            o.id
+    </select>
 </mapper>

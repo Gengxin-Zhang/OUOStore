@@ -31,6 +31,8 @@
         <ouostore-admin.version>0.0.1-SNAPSHOT</ouostore-admin.version>
         <jjwt.version>0.11.1</jjwt.version>
         <hutool-all.version>5.2.5</hutool-all.version>
+        <alipay-sdk-java.version>4.9.124.ALL</alipay-sdk-java.version>
+        <IJPay-AliPay.version>2.5.2</IJPay-AliPay.version>
     </properties>
 
     <modules>
@@ -154,6 +156,23 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool-all.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>${alipay-sdk-java.version}</version>
+        </dependency>
+<!--        &lt;!&ndash;IJPay第三方支付库&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.javen205</groupId>-->
+<!--            <artifactId>IJPay-AliPay</artifactId>-->
+<!--            <version>${IJPay-AliPay.version}</version>-->
+<!--        </dependency>-->
+        <!--消息队列相关依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
     </dependencies>
 

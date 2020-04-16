@@ -4,9 +4,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.csu.ouostore.model.entity.OmsOrder;
+import org.csu.ouostore.model.query.OmsGenerateConfirmOrderParam;
+import org.csu.ouostore.model.query.OmsGenerateOrderParam;
 import org.csu.ouostore.model.query.OmsOrderPatchParam;
 import org.csu.ouostore.model.query.OmsOrderQueryParam;
+import org.csu.ouostore.model.vo.ConfirmOrderVo;
 import org.csu.ouostore.model.vo.OmsOrderDetailVo;
+import org.csu.ouostore.model.vo.OrderVo;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -37,4 +42,29 @@ public interface OmsOrderService extends IService<OmsOrder> {
      * 更新订单
      */
     boolean patch(OmsOrderPatchParam orderPatchParam);
+
+    /**
+     * 生成确认单
+     */
+    @Transactional
+    ConfirmOrderVo generateConfirmOrder(OmsGenerateConfirmOrderParam param);
+
+    /**
+     * 生成订单
+     */
+    @Transactional
+    OrderVo generateOrder(OmsGenerateOrderParam param);
+
+    /**
+     * 取消超时订单
+     * @return 取消的订单数
+     */
+    Integer cancelTimeOutOrder();
+
+    /**
+     * 取消单个超时订单
+     */
+    @Transactional
+    void cancelOrder(Long orderId);
+
 }

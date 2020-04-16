@@ -1,7 +1,10 @@
 package org.csu.ouostore.service;
 
-import org.csu.ouostore.model.entity.OmsOrderItem;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.csu.ouostore.model.bo.CartItemDetail;
+import org.csu.ouostore.model.entity.OmsOrderItem;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OmsOrderItemService extends IService<OmsOrderItem> {
 
+    /**
+     * 查询cartItem详细信息
+     */
+    List<CartItemDetail> list(List<String> ids, Long memberId);
 }

@@ -1,7 +1,11 @@
 package org.csu.ouostore.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.csu.ouostore.model.bo.CartItemDetail;
 import org.csu.ouostore.model.entity.OmsCartItem;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface OmsCartItemMapper extends BaseMapper<OmsCartItem> {
 
+    /**
+     * 根据cartItem的id获取详细信息
+     */
+    List<CartItemDetail> list(@Param("ids") List<String> ids, @Param("member_id")Long memberId);
 }
