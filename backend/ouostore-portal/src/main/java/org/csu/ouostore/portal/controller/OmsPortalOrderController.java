@@ -52,7 +52,7 @@ public class OmsPortalOrderController {
         return CommonResult.OK(orderVo, "下单成功");
     }
 
-    @ApiOperation("支付宝支付")
+    @ApiOperation("支付宝支付,返回一个表单,前端请求post表单请求支付宝支付界面")
     @GetMapping("/{orderId}/alipay")
     public CommonResult<AlipayFormVo> alipay(@PathVariable Long orderId) {
         AlipayFormVo result = alipayService.alipay(orderId);
@@ -62,6 +62,7 @@ public class OmsPortalOrderController {
     /**
      * 支付成功后支付宝会以post请求设置的notify_url
      */
+    @ApiOperation(value = "支付宝异步回调", hidden = true)
     @PostMapping("/alipay/callback")
     public CommonResult alipayCallback(AlipayNotifyParam param) {
         alipayService.alipayCallback(param);
@@ -71,13 +72,14 @@ public class OmsPortalOrderController {
     /**
      * 支付宝同步回调接口
      */
+    @ApiOperation(value = "支付宝同步回调", hidden = true)
     @GetMapping("/alipay/callback")
     public CommonResult alipayCallback(HttpServletRequest request) {
         alipayService.alipayCallback(request);
         return CommonResult.OK(null);
     }
 
-    @ApiOperation("支付宝支付(测试使用)")
+    @ApiOperation("支付宝支付(测试使用),请求返回页面")
     @GetMapping("/{orderId}/alipay_test")
     public void alipayTest(@PathVariable Long orderId, HttpServletResponse response, HttpServletRequest request) throws IOException {
         OmsOrder order = orderService.getById(orderId);
