@@ -45,8 +45,12 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
     public IPage<PmsProduct> productListIpage(Page<PmsProduct> page, PmsProductQueryParam queryParam) {
         QueryWrapper<PmsProduct> wrapper = new QueryWrapper<PmsProduct>()
                 .eq("publish_status",1)
-                .gt("stock",0)
-                .eq("product_category_id",queryParam.getProductCategoryId());
+                .gt("stock", 0);
+
+        //选择特定商品目录的商品
+        if (!(queryParam.getProductCategoryId() == null)) {
+            wrapper.eq("product_category_id", queryParam.getProductCategoryId());
+        }
         page.setCurrent(queryParam.getPage());
         page.setSize(queryParam.getPerPage());
         return page(page, wrapper);
@@ -57,13 +61,10 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         QueryWrapper<PmsProduct> wrapper = new QueryWrapper<PmsProduct>()
                 .eq("publish_status",1)
                 .gt("stock",0);
-        if (StrUtil.isNotBlank(queryParam.getProductKeyword())){
-            wrapper.like("product_sn",queryParam.getProductSn());
-        }
-        if (StrUtil.isNotBlank(queryParam.getProductKeyword())){
+        if (StrUtil.isNotEmpty(queryParam.getProductKeyword())) {
             wrapper.like("name",queryParam.getProductKeyword());
-            wrapper.like("description",queryParam.getProductKeyword());
-            wrapper.like("keywords",queryParam.getProductKeyword());
+            //todo:关键字
+//            wrapper.like("keywords",queryParam.getProductKeyword());
         }
         page.setCurrent(queryParam.getPage());
         page.setSize(queryParam.getPerPage());

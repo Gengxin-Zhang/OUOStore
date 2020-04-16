@@ -42,18 +42,15 @@ public class PmsProductContrller {
     @GetMapping("/{keyword}")
     public CommonResult<Page<PmsProduct>> search(@PathVariable String keyword,PmsProductQueryParam queryParam){
         Page<PmsProduct> page = new Page<>();
-        if (Integer.parseInt(keyword) > 0){
-            queryParam.setProductSn(keyword);
-        }//todo
         queryParam.setProductKeyword(keyword);
         productService.select(page,queryParam);
         return CommonResult.OK(page);
     }
 
-    @ApiOperation("商品详情页面")
-    @GetMapping("/{productId}")
-    public CommonResult<PmsProductDetailVo> detail(@PathVariable Long productId){
-        PmsProductDetailVo detail = productService.detail(productId);
-        return CommonResult.OK(detail);
-     }
+//    @ApiOperation("商品详情页面")
+//    @GetMapping("/{productId}")
+//    public CommonResult<PmsProductDetailVo> detail(@PathVariable Long productId){
+//        PmsProductDetailVo detail = productService.detail(productId);
+//        return CommonResult.OK(detail);
+//     }
 }

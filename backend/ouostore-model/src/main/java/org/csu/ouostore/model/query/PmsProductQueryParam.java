@@ -29,8 +29,8 @@ public class PmsProductQueryParam {
     private Integer stock;
 
     @ApiModelProperty(value = "指定第几页,默认1", example = "1")
-    private Long page = 0L;
+    private Long page = 1L;
 
     @ApiModelProperty(value = "指定每页条数,默认20", example = "20")
-    private Long perPage = 20L;
+    private Long perPage = 5L;
 }
