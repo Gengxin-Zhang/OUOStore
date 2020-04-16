@@ -20,6 +20,20 @@ spring:
     username: guest
     password: guest
     publisher-confirms: true #如果对异步消息需要回调必须设置为true
+  #  application:
+  #      name: aliyun-sms
+  aliyun:
+    sms:
+      accessKeyId: LTAI4GBqhY4th4bTs1aQ5yXL #创建的accesskey中的AccessKey ID
+      accessKeySecret: MQP5L6toLfvENY4ridnUd2OtQ38cHd #创建的accesskey中的Access Key Secret
+      template_code: SMS_187951460 #模板管理中的模板CODE
+      sign_name: OUOStore #签名管理中的签名
+
+      product: Dysmsapi #云通信短信API产品,开发者无需替换
+      endpointName: cn-hangzhou #服务结点
+      dateFormat: yyyyMMdd #发送日期 支持30天内记录查询，格式yyyyMMdd
+      domain: dysmsapi.aliyuncs.com
+      regionId: cn-hangzhou #产品域名,开发者无需替换
 
 jwt:
   tokenHeader: Authorization #JWT存储的请求头
@@ -39,7 +53,6 @@ secure:
       - /**/*.png
       - /**/*.ico
       - /webjars/springfox-swagger-ui/**
-#      - /api/v1/**
       - /**
 
 # 自定义redis key

@@ -13,9 +13,6 @@
     <name>ouostore-portal</name>
     <description>portal of OUOStore</description>
 
-    <properties>
-        <java.version>11</java.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -38,6 +35,56 @@
             <groupId>org.csu</groupId>
             <artifactId>ouostore-common</artifactId>
         </dependency>
+        <!--redis依赖配置-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!--阿里云验证码服务配置-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.3.3</version>
+        </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-mapper</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-service</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-model</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-security</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.csu</groupId>
+                <artifactId>ouostore-common</artifactId>
+            </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

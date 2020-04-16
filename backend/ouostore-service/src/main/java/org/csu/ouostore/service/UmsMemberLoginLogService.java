@@ -2,6 +2,9 @@ package org.csu.ouostore.service;
 
 import org.csu.ouostore.model.entity.UmsMemberLoginLog;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.csu.ouostore.model.entity.UmsMemberReceiveAddress;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-04-09
  */
 public interface UmsMemberLoginLogService extends IService<UmsMemberLoginLog> {
-
 }

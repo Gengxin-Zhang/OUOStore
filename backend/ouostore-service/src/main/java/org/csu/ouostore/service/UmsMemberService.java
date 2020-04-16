@@ -1,8 +1,11 @@
 package org.csu.ouostore.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.csu.ouostore.model.dto.JwtDto;
 import org.csu.ouostore.model.entity.UmsMember;
+import org.csu.ouostore.model.query.UmsMemberPatchParam;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -14,15 +17,55 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public interface UmsMemberService extends IService<UmsMember> {
 
-     /**
+//    /**
+//     * 登入
+//     * @param username 用户名
+//     * @param password 密码
+//     * @return 生成的JWT的token
+//     */
+//    JwtDto signIn(String username, String password);
+
+    /**
+     * 注册
+     * @return 生成的JWT的token
+     */
+    JwtDto SignUp(String telephone, String authCode);
+
+    /**
+     * 根据用户名获取会员
+     */
+    UmsMember getByUsername(String username);
+
+    /**
+     * 根据会员编号获取会员
+     */
+    UmsMember getById(Long id);
+
+    /**
+     * 修改密码
+     */
+    @Transactional
+    void updatePassword(String telephone, String password, String authCode);
+
+    /**
+     * 获取当前登录会员
+     */
+    UmsMember getCurrentMember();
+
+    /**
      * 获取用户信息
      */
     UserDetails loadUserByUsername(String username);
 
     /**
-     * 通过username获取UmsMember
+     * 生成验证码
      */
-    UmsMember getByUsername(String username);
+    String generateAuthCode();
 
-    UmsMember getCurrentMember();
+
+    /**
+     * 修改用户信息
+     */
+    boolean patch(UmsMemberPatchParam param);
+
 }
