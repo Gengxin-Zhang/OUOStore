@@ -1,4 +1,4 @@
-package org.csu.ouostore.service;
+package org.csu.ouostore.portal.service;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;

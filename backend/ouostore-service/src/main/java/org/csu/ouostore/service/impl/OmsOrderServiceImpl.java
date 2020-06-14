@@ -14,16 +14,14 @@ import org.csu.ouostore.model.bo.CartItemDetail;
 import org.csu.ouostore.model.bo.OrderDetails;
 import org.csu.ouostore.model.entity.*;
 import org.csu.ouostore.model.query.OmsGenerateConfirmOrderParam;
-import org.csu.ouostore.model.query.OmsGenerateOrderParam;
 import org.csu.ouostore.model.query.OmsOrderPatchParam;
 import org.csu.ouostore.model.query.OmsOrderQueryParam;
 import org.csu.ouostore.model.vo.ConfirmOrderVo;
 import org.csu.ouostore.model.vo.OmsOrderDetailVo;
-import org.csu.ouostore.model.vo.OrderVo;
 import org.csu.ouostore.service.*;
-import org.csu.ouostore.service.component.CancelOrderSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -34,7 +32,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -45,30 +42,29 @@ import java.util.stream.Collectors;
  * @since 2020-04-09
  */
 @Service
+@Primary
 public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> implements OmsOrderService {
 
     @Autowired
-    OmsOrderItemService orderItemService;
+    protected OmsOrderItemService orderItemService;
     @Autowired
-    OmsOrderOperateLogService orderOperateLogService;
+    protected OmsOrderOperateLogService orderOperateLogService;
     @Autowired
-    OmsCartItemService cartItemService;
+    protected OmsCartItemService cartItemService;
     @Autowired
-    UmsMemberService memberService;
+    protected UmsMemberService memberService;
     @Autowired
-    UmsMemberReceiveAddressService memberReceiveAddressService;
+    protected UmsMemberReceiveAddressService memberReceiveAddressService;
     @Autowired
-    PmsSkuStockService skuStockService;
+    protected PmsSkuStockService skuStockService;
     @Autowired
-    RedisService redisService;
+    protected RedisService redisService;
     @Autowired
-    OmsOrderService orderService;
+    protected OmsOrderService orderService;
     @Autowired
-    OmsOrderSettingService orderSettingService;
+    protected OmsOrderSettingService orderSettingService;
     @Autowired
-    OmsOrderMapper orderMapper;
-    @Autowired
-    CancelOrderSender cancelOrderSender;
+    protected OmsOrderMapper orderMapper;
 
     @Value("${redis.key.orderId}")
     private String REDIS_KEY_ORDER_ID;
@@ -160,77 +156,6 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     }
 
     @Override
-    public OrderVo generateOrder(OmsGenerateOrderParam param) {
-        List<OmsOrderItem> orderItemList = new ArrayList<>();
-        //获取当前用户
-        UmsMember member = memberService.getCurrentMember();
-        //查询符合条件的cartItem
-        List<CartItemDetail> cartItemDetails = orderItemService.list(Arrays.asList(param.getItemIds()), member.getId());
-        if (!hasStock(cartItemDetails)) {
-            throw new ApiException("库存不足,无法下单");
-        }
-        for (CartItemDetail cartItemDetail : cartItemDetails) {
-            OmsOrderItem orderItem = BeanUtil.copyProperties(cartItemDetail, OmsOrderItem.class);
-            orderItem.setProductId(cartItemDetail.getProductId());
-            orderItem.setProductName(cartItemDetail.getProductName());
-            orderItem.setProductPic(cartItemDetail.getProductPic());
-            orderItem.setProductAttr(cartItemDetail.getProductAttr());
-            orderItem.setProductPrice(cartItemDetail.getPrice());
-            orderItem.setProductQuantity(cartItemDetail.getQuantity());
-            orderItem.setProductSkuId(cartItemDetail.getProductSkuId());
-            orderItem.setProductSkuCode(cartItemDetail.getProductSkuCode());
-            orderItem.setProductCategoryId(cartItemDetail.getProductCategoryId());
-            orderItem.setRealAmount(cartItemDetail.getPrice().multiply(new BigDecimal(cartItemDetail.getQuantity())));
-            orderItemList.add(orderItem);
-        }
-        //进行库存锁定
-        lockStock(cartItemDetails);
-        //生成订单信息
-        OmsOrder order = new OmsOrder();
-        order.setTotalPrice(calcTotalAmount(orderItemList));
-        order.setMemberId(member.getId());
-        order.setCreateTime(LocalDateTime.now());
-        order.setMemberUsername(member.getUsername());
-        //支付方式：0->未支付；1->支付宝；2->微信
-        order.setPayType(param.getPayType());
-        //订单状态：0->待付款；1->待发货；2->已发货；3->已完成；4->已关闭；5->无效订单
-        order.setStatus(0);
-        //收货人信息：姓名、电话、邮编、地址
-        UmsMemberReceiveAddress address = memberReceiveAddressService.getById(param.getAddressId());
-        if (ObjectUtil.isNull(address)) {
-            throw new ApiException("地址不存在");
-        }
-        order.setReceiverName(address.getName());
-        order.setReceiverPhone(address.getPhoneNumber());
-        order.setReceiverPostCode(address.getPostCode());
-        order.setReceiverProvince(address.getProvince());
-        order.setReceiverCity(address.getCity());
-        order.setReceiverRegion(address.getRegion());
-        order.setReceiverDetailAddress(address.getDetailAddress());
-        //0->未确认；1->已确认
-        order.setConfirmStatus(0);
-        order.setDeleteStatus(0);
-        //生成订单号
-        order.setOrderSn(generateOrderSn(order));
-        //插入order表和order_item表
-        orderService.save(order);
-        for (OmsOrderItem orderItem : orderItemList) {
-            orderItem.setOrderId(order.getId());
-            orderItem.setOrderSn(order.getOrderSn());
-        }
-        orderItemService.saveBatch(orderItemList);
-        //删除购物车中的下单商品
-        cartItemService.removeByIds(cartItemDetails.stream().map(CartItemDetail::getId).collect(Collectors.toSet()));
-        //发送延迟消息取消订单
-
-        sendDelayMessageCancelOrder(order.getId());
-        OrderVo orderVo = new OrderVo();
-        orderVo.setOrder(order);
-        orderVo.setOmsOrderItems(orderItemList);
-        return orderVo;
-    }
-
-    @Override
     public Integer cancelTimeOutOrder() {
         Integer count= 0;
         //获取最后一条setting
@@ -277,7 +202,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     /**
      * 判断下单商品是否都有库存
      */
-    private boolean hasStock(List<CartItemDetail> cartPromotionItemList) {
+    protected boolean hasStock(List<CartItemDetail> cartPromotionItemList) {
         for (CartItemDetail cartItemDetail : cartPromotionItemList) {
             if (cartItemDetail.getRealStock() == null || cartItemDetail.getRealStock() <= 0) {
                 return false;
@@ -289,7 +214,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     /**
      * 锁定下单商品的所有库存
      */
-    private void lockStock(List<CartItemDetail> cartPromotionItemList) {
+    protected void lockStock(List<CartItemDetail> cartPromotionItemList) {
         for (CartItemDetail cartItemDetail : cartPromotionItemList) {
             PmsSkuStock skuStock = skuStockService.getById(cartItemDetail.getProductSkuId());
             skuStock.setLockStock(skuStock.getLockStock() + cartItemDetail.getQuantity());
@@ -300,7 +225,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     /**
      * 计算订单
      */
-    private BigDecimal calcTotalAmount(List<OmsOrderItem> orderItemList) {
+    protected BigDecimal calcTotalAmount(List<OmsOrderItem> orderItemList) {
         BigDecimal totalAmount = new BigDecimal("0");
         for (OmsOrderItem item : orderItemList) {
             totalAmount = totalAmount.add(item.getProductPrice().multiply(new BigDecimal(item.getProductQuantity())));
@@ -311,7 +236,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     /**
      * 生成16位订单编号:8位日期+2位支付方式+6位以上自增id
      */
-    private String generateOrderSn(OmsOrder order) {
+    protected String generateOrderSn(OmsOrder order) {
         StringBuilder sb = new StringBuilder();
         String date = new SimpleDateFormat("yyyyMMdd").format(LocalDateTime.now());
         String key = REDIS_DATABASE+":"+ REDIS_KEY_ORDER_ID + date;
@@ -325,14 +250,6 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             sb.append(incrementStr);
         }
         return sb.toString();
-    }
-
-    private void sendDelayMessageCancelOrder(Long orderId) {
-        //获取订单超时时间
-        OmsOrderSetting orderSetting = orderSettingService.list(new QueryWrapper<OmsOrderSetting>().orderByDesc("id")).get(0);
-        long delayTimes = orderSetting.getUnpaidOvertime() * 60 * 1000;
-        //发送延迟消息
-        cancelOrderSender.sendMessage(orderId, delayTimes);
     }
 
 }

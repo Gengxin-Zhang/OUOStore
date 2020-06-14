@@ -14,8 +14,8 @@ import org.csu.ouostore.model.query.OmsGenerateOrderParam;
 import org.csu.ouostore.model.vo.AlipayFormVo;
 import org.csu.ouostore.model.vo.ConfirmOrderVo;
 import org.csu.ouostore.model.vo.OrderVo;
+import org.csu.ouostore.portal.service.OmsPortalOrderService;
 import org.csu.ouostore.service.AlipayService;
-import org.csu.ouostore.service.OmsOrderService;
 import org.csu.ouostore.service.config.AlipayConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +34,7 @@ import java.io.PrintWriter;
 public class OmsPortalOrderController {
 
     @Autowired
-    private OmsOrderService orderService;
+    private OmsPortalOrderService orderService;
     @Autowired
     private AlipayService alipayService;
 

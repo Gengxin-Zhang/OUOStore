@@ -5,12 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.csu.ouostore.model.entity.OmsOrder;
 import org.csu.ouostore.model.query.OmsGenerateConfirmOrderParam;
-import org.csu.ouostore.model.query.OmsGenerateOrderParam;
 import org.csu.ouostore.model.query.OmsOrderPatchParam;
 import org.csu.ouostore.model.query.OmsOrderQueryParam;
 import org.csu.ouostore.model.vo.ConfirmOrderVo;
 import org.csu.ouostore.model.vo.OmsOrderDetailVo;
-import org.csu.ouostore.model.vo.OrderVo;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -48,12 +46,6 @@ public interface OmsOrderService extends IService<OmsOrder> {
      */
     @Transactional
     ConfirmOrderVo generateConfirmOrder(OmsGenerateConfirmOrderParam param);
-
-    /**
-     * 生成订单
-     */
-    @Transactional
-    OrderVo generateOrder(OmsGenerateOrderParam param);
 
     /**
      * 取消超时订单

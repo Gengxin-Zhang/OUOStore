@@ -1,6 +1,6 @@
 package org.csu.ouostore.portal.config;
 
-import org.csu.ouostore.service.component.QueueEnum;
+import org.csu.ouostore.portal.service.component.QueueEnum;
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

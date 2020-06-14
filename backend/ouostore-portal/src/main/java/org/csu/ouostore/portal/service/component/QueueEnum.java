@@ -1,4 +1,4 @@
-package org.csu.ouostore.service.component;
+package org.csu.ouostore.portal.service.component;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package org.csu.ouostore.service.impl;
+package org.csu.ouostore.portal.service.impl;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -10,7 +10,7 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.csu.ouostore.model.query.CaptchaQueryParam;
-import org.csu.ouostore.service.AliyunSmsSenderService;
+import org.csu.ouostore.portal.service.AliyunSmsSenderService;
 import org.csu.ouostore.service.RedisService;
 import org.csu.ouostore.service.UmsMemberService;
 import org.csu.ouostore.service.config.AliyunSMSConfig;

@@ -1,4 +1,4 @@
-package org.csu.ouostore.portal.config;
+package org.csu.ouostore.service.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

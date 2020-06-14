@@ -6,7 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.csu.ouostore.common.api.CommonResult;
 import org.csu.ouostore.model.query.CaptchaQueryParam;
-import org.csu.ouostore.service.AliyunSmsSenderService;
+import org.csu.ouostore.portal.service.AliyunSmsSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
