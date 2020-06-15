@@ -23,6 +23,8 @@
         <velocity-engine-core.version>2.2</velocity-engine-core.version>
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <springfox-swagger2-ui.version>${springfox-swagger2.version}</springfox-swagger2-ui.version>
+        <swagger-annotations.version>1.5.21</swagger-annotations.version>
+        <swagger-models.version>${swagger-annotations.version}</swagger-models.version>
         <ouostore-mapper.version>1.0-SNAPSHOT</ouostore-mapper.version>
         <ouostore-model.version>1.0-SNAPSHOT</ouostore-model.version>
         <ouostore-service.version>1.0-SNAPSHOT</ouostore-service.version>
@@ -127,6 +129,17 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox-swagger2-ui.version}</version>
+        </dependency>
+        <!--解决未指定default_value时默认String转数值类型的报错-->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger-models.version}</version>
         </dependency>
 	    <!--redis核心包-->
         <dependency>
