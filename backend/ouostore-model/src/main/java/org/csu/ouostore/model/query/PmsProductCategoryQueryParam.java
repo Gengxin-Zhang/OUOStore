@@ -1,12 +1,13 @@
 package org.csu.ouostore.model.query;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@ApiModel(description = "商品种类查询对象")
 public class PmsProductCategoryQueryParam {
 //
 //    @ApiModelProperty(value = "商品目录编号")
