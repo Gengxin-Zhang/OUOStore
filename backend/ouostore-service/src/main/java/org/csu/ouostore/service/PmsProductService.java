@@ -2,15 +2,12 @@ package org.csu.ouostore.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.csu.ouostore.model.entity.OmsOrder;
-import org.csu.ouostore.model.entity.PmsProduct;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.csu.ouostore.model.query.OmsOrderQueryParam;
+import org.csu.ouostore.model.entity.PmsProduct;
+import org.csu.ouostore.model.query.PmsProductParam;
 import org.csu.ouostore.model.query.PmsProductQueryParam;
-import org.csu.ouostore.model.vo.OmsOrderDetailVo;
 import org.csu.ouostore.model.vo.PmsProductDetailVo;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -20,6 +17,7 @@ import java.util.List;
  * @author zack
  * @since 2020-04-09
  */
+@Transactional
 public interface PmsProductService extends IService<PmsProduct> {
 
    /**
@@ -37,4 +35,14 @@ public interface PmsProductService extends IService<PmsProduct> {
     */
    PmsProductDetailVo detail(Long id);
 
+   /**
+    * 创建商品
+    */
+    boolean create(PmsProductParam productParam);
+
+    /**
+     * 更新商品
+     * @return
+     */
+    boolean update1(Long id, PmsProductParam productParam);
 }
