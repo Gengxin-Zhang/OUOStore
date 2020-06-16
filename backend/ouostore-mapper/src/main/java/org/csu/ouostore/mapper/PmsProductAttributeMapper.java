@@ -1,7 +1,11 @@
 package org.csu.ouostore.mapper;
 
-import org.csu.ouostore.model.entity.PmsProductAttribute;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.csu.ouostore.model.entity.PmsProductAttribute;
+import org.csu.ouostore.model.vo.ProductAttrInfo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface PmsProductAttributeMapper extends BaseMapper<PmsProductAttribute> {
 
+    /**
+     * 获取商品属性信息
+     */
+    List<ProductAttrInfo> getProductAttrInfo(@Param("id") Long productCategoryId);
 }
