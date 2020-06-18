@@ -3,15 +3,15 @@
 
  Source Server         : zack
  Source Server Type    : MySQL
- Source Server Version : 50729
- Source Host           : localhost:3306
+ Source Server Version : 50730
+ Source Host           : 127.0.0.1:3306
  Source Schema         : ouostore
 
  Target Server Type    : MySQL
- Target Server Version : 50729
+ Target Server Version : 50730
  File Encoding         : 65001
 
- Date: 10/04/2020 23:25:10
+ Date: 18/06/2020 18:16:16
 */
 
 SET NAMES utf8mb4;
@@ -38,12 +38,13 @@ CREATE TABLE `oms_cart_item` (
   `product_sn` varchar(200) DEFAULT NULL COMMENT '货号',
   `product_attr` varchar(500) DEFAULT NULL COMMENT '商品销售属性:[{"key":"颜色","value":"颜色"},{"key":"容量","value":"4G"}]',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='购物车表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='购物车表';
 
 -- ----------------------------
 -- Records of oms_cart_item
 -- ----------------------------
 BEGIN;
+INSERT INTO `oms_cart_item` VALUES (1, 1, 1, 1, 1, 1.00, NULL, NULL, '1', '2020-04-14 23:16:36', '2020-04-14 23:16:44', 0, 1, '1', '1');
 COMMIT;
 
 -- ----------------------------
@@ -62,12 +63,13 @@ CREATE TABLE `oms_company_address` (
   `region` varchar(64) DEFAULT NULL COMMENT '区',
   `detail_address` varchar(200) DEFAULT NULL COMMENT '详细地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='公司发货/收货(接收退货)地址表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='公司发货/收货(接收退货)地址表';
 
 -- ----------------------------
 -- Records of oms_company_address
 -- ----------------------------
 BEGIN;
+INSERT INTO `oms_company_address` VALUES (1, '深圳发货点', 1, 1, 'zack', '17755555555', '广东省', '深圳市', '福田区', '梅林路173号');
 COMMIT;
 
 -- ----------------------------
@@ -100,12 +102,30 @@ CREATE TABLE `oms_order` (
   `receive_time` datetime DEFAULT NULL COMMENT '确认收货时间',
   `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='订单表';
 
 -- ----------------------------
 -- Records of oms_order
 -- ----------------------------
 BEGIN;
+INSERT INTO `oms_order` VALUES (1, 1, '123123123123', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (2, 1, '1231278123812', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (3, 1, '1231278123811', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (4, 1, '12312781238211', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (5, 1, '123121781238211', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (6, 1, '12312123438211', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (7, 1, '123121231238211', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (8, 1, '1231211111111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (9, 1, '12312116666111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (10, 1, '1231211622266111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (11, 1, '123121331666111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (12, 1, '123121111666111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (13, 1, '12313331666111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (14, 1, '12313331622111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (15, 1, '123444441622111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (16, 1, '1234422331622111', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (17, 1, '999999999999', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `oms_order` VALUES (18, 1, '999999333999', '2020-04-16 17:40:12', NULL, 100.00, NULL, 4, NULL, NULL, NULL, '123', '111111111', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -165,12 +185,13 @@ CREATE TABLE `oms_order_setting` (
   `confirm_overtime` int(11) DEFAULT NULL COMMENT '发货后自动确认收货时间（天）',
   `finish_overtime` int(11) DEFAULT NULL COMMENT '收货后自动完成交易时间，不能申请售后（天）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='订单设置表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='订单设置表';
 
 -- ----------------------------
 -- Records of oms_order_setting
 -- ----------------------------
 BEGIN;
+INSERT INTO `oms_order_setting` VALUES (1, 30, 7, 7);
 COMMIT;
 
 -- ----------------------------
@@ -201,10 +222,6 @@ CREATE TABLE `pms_product` (
 -- Records of pms_product
 -- ----------------------------
 BEGIN;
-INSERT INTO `pms_product`(name, product_sn, publish_status, price, description, stock, keywords)
-VALUES ('tutu', 'abc', 1, 99.99, 'good', 200, 'a');
-INSERT INTO `pms_product`(name, product_sn, publish_status, price, description, stock, keywords)
-VALUES ('t', 'abcd', 0, 99.99, 'well', 200, 'ad');
 COMMIT;
 
 -- ----------------------------
@@ -222,12 +239,14 @@ CREATE TABLE `pms_product_attribute` (
   `hand_add_status` int(1) DEFAULT NULL COMMENT '是否支持手动新增；0->不支持；1->支持',
   `type` int(1) DEFAULT NULL COMMENT '属性的类型；0->属性(规格)；1->参数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='商品属性(规格)参数表,一条记录对应一个规格/参数';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='商品属性(规格)参数表,一条记录对应一个规格/参数';
 
 -- ----------------------------
 -- Records of pms_product_attribute
 -- ----------------------------
 BEGIN;
+INSERT INTO `pms_product_attribute` VALUES (2, 1, '重量', 0, 0, '1kg,2kg,3kg', 0, 1, 1);
+INSERT INTO `pms_product_attribute` VALUES (3, 1, '重量', 0, 0, '1kg,2kg,3kg', 0, 1, 1);
 COMMIT;
 
 -- ----------------------------
@@ -240,12 +259,13 @@ CREATE TABLE `pms_product_attribute_category` (
   `attribute_count` int(11) DEFAULT '0' COMMENT '规格(购买时选项如 黑/白, 1岁/2岁)数量',
   `param_count` int(11) DEFAULT '0' COMMENT '参数(通用参数)数量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='产品规格及属性分类表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='产品规格及属性分类表';
 
 -- ----------------------------
 -- Records of pms_product_attribute_category
 -- ----------------------------
 BEGIN;
+INSERT INTO `pms_product_attribute_category` VALUES (1, '宠物', 0, 2);
 COMMIT;
 
 -- ----------------------------
@@ -277,7 +297,17 @@ CREATE TABLE `pms_product_category` (
   `show_status` int(1) DEFAULT NULL COMMENT '显示状态：0->不显示；1->显示',
   `icon` varchar(255) DEFAULT NULL COMMENT '图标',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='宠物一级分类,猫/狗/兔子...';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='宠物一级分类,猫/狗/兔子...';
+
+-- ----------------------------
+-- Records of pms_product_category
+-- ----------------------------
+BEGIN;
+INSERT INTO `pms_product_category` VALUES (2, '猫', NULL, 0, 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180522/web.png');
+INSERT INTO `pms_product_category` VALUES (3, '狗', NULL, 0, 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180522/web.png');
+INSERT INTO `pms_product_category` VALUES (4, '兔子', NULL, 0, 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180522/web.png');
+INSERT INTO `pms_product_category` VALUES (5, '鹦鹉', NULL, 0, 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180522/web.png');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for pms_product_category_attribute_relation
@@ -288,30 +318,12 @@ CREATE TABLE `pms_product_category_attribute_relation` (
   `product_category_id` bigint(20) DEFAULT NULL,
   `product_attribute_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='产品的分类和属性的关系表，用于设置分类筛选条件（只支持一级分类）';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='产品的分类和属性的关系表，用于设置分类筛选条件（只支持一级分类）';
 
 -- ----------------------------
--- Records of pms_product_category
+-- Records of pms_product_category_attribute_relation
 -- ----------------------------
 BEGIN;
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("bird", 34, 1)
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("rabbit", 34, 1)
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("dog", 34, 1)
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("cat", 34, 0)
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("reptile", 34, 1)
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("donkey", 34, 0)
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("horse", 34, 1)
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("fish", 34, 1)
-INSERT INTO `pms_product_category`(name, product_count, show_status)
-VALUES ("leopard", 34, 0)
 COMMIT;
 
 -- ----------------------------
@@ -329,12 +341,13 @@ CREATE TABLE `pms_sku_stock` (
   `lock_stock` int(11) DEFAULT '0' COMMENT '被锁定的库存',
   `sp_data` varchar(500) DEFAULT NULL COMMENT '商品销售属性[{"key":"毛色","value":"黑色"},{"key":"年龄","value":"1岁"}]',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='sku(库存保有单位)的库存';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='sku(库存保有单位)的库存';
 
 -- ----------------------------
 -- Records of pms_sku_stock
 -- ----------------------------
 BEGIN;
+INSERT INTO `pms_sku_stock` VALUES (1, 1, '1', 100.00, 100, NULL, NULL, 10, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -350,6 +363,7 @@ CREATE TABLE `ums_admin` (
   `nick_name` varchar(200) DEFAULT NULL COMMENT '昵称',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `status` int(1) DEFAULT '1' COMMENT '帐号启用状态：0->禁用；1->启用',
+  `token_identifier` varchar(64) DEFAULT NULL COMMENT 'jwt负载中存入此字段,每次比对,修改使token失效',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台用户表';
 
@@ -357,9 +371,9 @@ CREATE TABLE `ums_admin` (
 -- Records of ums_admin
 -- ----------------------------
 BEGIN;
-INSERT INTO `ums_admin` VALUES (1, 'zack', '$2a$10$1Q1q60TCczY5B.DRA5Sgle4WAP/uthPPhQITD62X1p9wwGeSGFYm.', NULL, NULL, 'zack', '2020-04-09 14:37:42', 1);
-INSERT INTO `ums_admin` VALUES (2, 'zack1', '$2a$10$Zsuu0JNX1.hHBVauSNlYaeZYr45tjv/sIKe.Wcf.vg.3niJlAZPBa', NULL, NULL, NULL, '2020-04-10 09:16:10', 1);
-INSERT INTO `ums_admin` VALUES (3, 'zack11', '$2a$10$bCFjbLBonnooBj/kg.j8geNAkp0lRBfoutDuMzBxqKO.WlZyx7dI2', NULL, NULL, NULL, '2020-04-10 10:17:31', 1);
+INSERT INTO `ums_admin` VALUES (1, 'zack', '$2a$10$XkpRIbMKSk3VXVoVSlnw9.19h5Sw78q9SYQA/p2lrv110bT1gePoy', NULL, NULL, 'zack', '2020-04-09 14:37:42', 1, NULL);
+INSERT INTO `ums_admin` VALUES (2, 'zack1', '$2a$10$Zsuu0JNX1.hHBVauSNlYaeZYr45tjv/sIKe.Wcf.vg.3niJlAZPBa', NULL, NULL, NULL, '2020-04-10 09:16:10', 1, NULL);
+INSERT INTO `ums_admin` VALUES (3, 'zack11', '$2a$10$bCFjbLBonnooBj/kg.j8geNAkp0lRBfoutDuMzBxqKO.WlZyx7dI2', NULL, NULL, NULL, '2020-04-10 10:17:31', 1, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -373,7 +387,7 @@ CREATE TABLE `ums_admin_login_log` (
   `ip` varchar(64) DEFAULT NULL,
   `address` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台用户登录日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台用户登录日志表';
 
 -- ----------------------------
 -- Records of ums_admin_login_log
@@ -387,6 +401,9 @@ INSERT INTO `ums_admin_login_log` VALUES (5, 1, '2020-04-10 09:41:02', '127.0.0.
 INSERT INTO `ums_admin_login_log` VALUES (6, 3, '2020-04-10 10:17:31', '127.0.0.1', NULL);
 INSERT INTO `ums_admin_login_log` VALUES (7, 1, '2020-04-10 10:17:51', '127.0.0.1', NULL);
 INSERT INTO `ums_admin_login_log` VALUES (8, 2, '2020-04-10 10:17:56', '127.0.0.1', NULL);
+INSERT INTO `ums_admin_login_log` VALUES (9, 4, '2020-04-14 16:29:57', '0:0:0:0:0:0:0:1', NULL);
+INSERT INTO `ums_admin_login_log` VALUES (10, 4, '2020-04-14 16:53:21', '0:0:0:0:0:0:0:1', NULL);
+INSERT INTO `ums_admin_login_log` VALUES (11, 1, '2020-04-14 16:57:40', '0:0:0:0:0:0:0:1', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -398,12 +415,14 @@ CREATE TABLE `ums_admin_role_relation` (
   `admin_id` bigint(20) DEFAULT NULL,
   `role_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台用户和角色关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台用户和角色关系表';
 
 -- ----------------------------
 -- Records of ums_admin_role_relation
 -- ----------------------------
 BEGIN;
+INSERT INTO `ums_admin_role_relation` VALUES (6, 1, 1);
+INSERT INTO `ums_admin_role_relation` VALUES (7, 1, 2);
 COMMIT;
 
 -- ----------------------------
@@ -433,7 +452,7 @@ CREATE TABLE `ums_member` (
 -- Records of ums_member
 -- ----------------------------
 BEGIN;
-INSERT INTO `ums_member` VALUES (1, 'zack', '123456', 'zack', '177', NULL, '2020-04-09 06:33:15', NULL, 0, NULL, NULL, NULL, 'sldfjlsdjflkj123j12ioigakdfj');
+INSERT INTO `ums_member` VALUES (1, 'zack', '$2a$10$XkpRIbMKSk3VXVoVSlnw9.19h5Sw78q9SYQA/p2lrv110bT1gePoy', 'zack', '177', NULL, '2020-04-09 06:33:15', NULL, 0, NULL, NULL, NULL, 'sldfjlsdjflkj123j12ioigakdfj');
 COMMIT;
 
 -- ----------------------------
@@ -514,12 +533,14 @@ CREATE TABLE `ums_resource` (
   `description` varchar(500) DEFAULT NULL COMMENT '描述',
   `category_id` bigint(20) DEFAULT NULL COMMENT '资源分类ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台资源表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台资源表';
 
 -- ----------------------------
 -- Records of ums_resource
 -- ----------------------------
 BEGIN;
+INSERT INTO `ums_resource` VALUES (2, '2020-04-11 03:32:09', '商品管理', '/api/v1/admin/**', '新增,下架商品等操作', NULL);
+INSERT INTO `ums_resource` VALUES (5, '2020-04-14 16:13:22', '超级资源', '/api/v1/**', '包含所有资源', 10);
 COMMIT;
 
 -- ----------------------------
@@ -532,12 +553,16 @@ CREATE TABLE `ums_resource_category` (
   `name` varchar(200) DEFAULT NULL COMMENT '分类名称',
   `sort` int(4) DEFAULT NULL COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='资源分类表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='资源分类表';
 
 -- ----------------------------
 -- Records of ums_resource_category
 -- ----------------------------
 BEGIN;
+INSERT INTO `ums_resource_category` VALUES (5, '2020-04-12 22:46:10', '订单模块', 0);
+INSERT INTO `ums_resource_category` VALUES (8, '2020-04-12 22:47:29', '权限模块', 0);
+INSERT INTO `ums_resource_category` VALUES (9, '2020-04-12 22:48:13', '用户模块', 0);
+INSERT INTO `ums_resource_category` VALUES (10, '2020-04-14 16:12:32', '其他', 0);
 COMMIT;
 
 -- ----------------------------
@@ -553,12 +578,14 @@ CREATE TABLE `ums_role` (
   `status` int(1) DEFAULT '1' COMMENT '启用状态：0->禁用；1->启用',
   `sort` int(11) DEFAULT '0',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台用户角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台用户角色表';
 
 -- ----------------------------
 -- Records of ums_role
 -- ----------------------------
 BEGIN;
+INSERT INTO `ums_role` VALUES (1, '超级管理员', '拥有所有权限', 0, '2020-04-11 17:07:14', 1, 0);
+INSERT INTO `ums_role` VALUES (2, '商品管理员', '管理商品', 0, '2020-04-12 22:54:41', 1, 0);
 COMMIT;
 
 -- ----------------------------
@@ -587,12 +614,19 @@ CREATE TABLE `ums_role_resource_relation` (
   `role_id` bigint(20) DEFAULT NULL COMMENT '角色ID',
   `resource_id` bigint(20) DEFAULT NULL COMMENT '资源ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台角色资源关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='后台角色资源关系表';
 
 -- ----------------------------
 -- Records of ums_role_resource_relation
 -- ----------------------------
 BEGIN;
+INSERT INTO `ums_role_resource_relation` VALUES (1, 1, 2);
+INSERT INTO `ums_role_resource_relation` VALUES (2, 1, 0);
+INSERT INTO `ums_role_resource_relation` VALUES (3, 1, 3);
+INSERT INTO `ums_role_resource_relation` VALUES (4, 1, 4);
+INSERT INTO `ums_role_resource_relation` VALUES (5, 1, 1);
+INSERT INTO `ums_role_resource_relation` VALUES (6, 1, 12);
+INSERT INTO `ums_role_resource_relation` VALUES (7, 1, 5);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
