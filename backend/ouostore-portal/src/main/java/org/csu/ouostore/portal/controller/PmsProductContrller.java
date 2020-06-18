@@ -1,21 +1,21 @@
 package org.csu.ouostore.portal.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.csu.ouostore.common.api.CommonResult;
 import org.csu.ouostore.model.entity.PmsProduct;
-import org.csu.ouostore.model.entity.PmsProductCategory;
+import org.csu.ouostore.model.entity.PmsProductAttributeValue;
+import org.csu.ouostore.model.entity.PmsSkuStock;
+import org.csu.ouostore.model.query.PmsProductParam;
 import org.csu.ouostore.model.query.PmsProductQueryParam;
-import org.csu.ouostore.model.vo.OmsOrderDetailVo;
-import org.csu.ouostore.model.vo.PmsProductDetailVo;
+import org.csu.ouostore.service.PmsProductAttributeValueService;
 import org.csu.ouostore.service.PmsProductService;
+import org.csu.ouostore.service.PmsSkuStockService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,7 +28,11 @@ import java.util.List;
 public class PmsProductContrller {
 
     @Autowired
-    PmsProductService productService;
+    private PmsProductService productService;
+    @Autowired
+    private PmsSkuStockService skuStockService;
+    @Autowired
+    private PmsProductAttributeValueService productAttributeValueService;
 
     @ApiOperation("分页返回商品列表")
     @GetMapping("")
@@ -47,10 +51,17 @@ public class PmsProductContrller {
         return CommonResult.OK(page);
     }
 
-//    @ApiOperation("商品详情页面")
-//    @GetMapping("/{productId}")
-//    public CommonResult<PmsProductDetailVo> detail(@PathVariable Long productId){
-//        PmsProductDetailVo detail = productService.detail(productId);
-//        return CommonResult.OK(detail);
-//     }
+    @ApiOperation("根据商品id获取商品所有详细信息")
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    public CommonResult<PmsProductParam> getUpdateInfo(@PathVariable Long id) {
+        PmsProduct product = productService.getById(id);
+        List<PmsSkuStock> skuStocks = skuStockService.list(new QueryWrapper<PmsSkuStock>().eq("product_id", id));
+        List<PmsProductAttributeValue> productAttributeValues = productAttributeValueService.list(
+                new QueryWrapper<PmsProductAttributeValue>().eq("product_id", id));
+        PmsProductParam productParam = BeanUtil.copyProperties(product, PmsProductParam.class);
+        productParam.setSkuStockList(skuStocks);
+        productParam.setProductAttributeValueList(productAttributeValues);
+        return CommonResult.OK(productParam);
+    }
 }
