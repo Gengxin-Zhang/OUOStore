@@ -78,7 +78,6 @@ public class UmsRoleController {
         return CommonResult.OK(rolePage);
     }
 
-
     @ApiOperation("获取角色相关资源")
     @GetMapping("/{id}/resources")
     public CommonResult<List<UmsResource>> queryResourcesByRoleId(@PathVariable Long id) {
@@ -87,7 +86,7 @@ public class UmsRoleController {
     }
 
     @ApiOperation("给角色分配资源")
-    @PostMapping("/{roleId}/resources/{resourceId}}")
+    @PostMapping("/{roleId}/resources/{resourceId}")
     public CommonResult allocResource(@PathVariable Long roleId, @PathVariable Long resourceId) {
         boolean success = roleResourceRelationService.allocateResource(roleId, resourceId);
         return success ? CommonResult.OK("分配成功") : CommonResult.failed("分配失败,未知错误");

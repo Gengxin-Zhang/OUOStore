@@ -89,7 +89,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     public boolean delete(Long id) {
         OmsOrder order = new OmsOrder();
         order.setId(id);
-        order.setStatus(1); //删除状态为1
+        order.setStatus(4); //删除状态为1
         this.updateById(order);
         return true;
     }

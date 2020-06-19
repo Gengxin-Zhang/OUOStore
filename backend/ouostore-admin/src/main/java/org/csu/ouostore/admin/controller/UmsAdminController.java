@@ -107,7 +107,14 @@ public class UmsAdminController {
         return success ? CommonResult.OK("分配成功") : CommonResult.failed("分配失败,未知原因");
     }
 
-    @ApiOperation("获取指定用户的角色")
+    @ApiOperation("删除用户角色")
+    @DeleteMapping("/users/{userId}/roles/{roleId}")
+    public CommonResult delRole(@PathVariable("userId") Long userId, @PathVariable("roleId") Long roleId) {
+        boolean success = adminRoleRelationService.delete(userId, roleId);
+        return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,未知原因");
+    }
+
+    @ApiOperation("查询指定用户的角色")
     @GetMapping("/users/{id}/roles")
     public CommonResult<List<UmsRole>> getRoleList(@PathVariable Long id) {
         List<UmsRole> roleList = adminService.getRoleList(id);

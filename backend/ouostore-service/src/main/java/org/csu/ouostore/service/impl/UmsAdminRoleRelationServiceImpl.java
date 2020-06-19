@@ -49,4 +49,24 @@ public class UmsAdminRoleRelationServiceImpl extends ServiceImpl<UmsAdminRoleRel
         }
         return this.save(relation);
     }
+
+    @Override
+    public boolean delete(Long adminId, Long roleId) {
+        UmsAdmin adminOne = adminService.getOne(new QueryWrapper<UmsAdmin>().eq("id", adminId));
+        if (ObjectUtil.isNull(adminOne)) {
+            throw new ApiException("该用户不存在");
+        }
+        UmsRole roleOne = roleService.getOne(new QueryWrapper<UmsRole>().eq("id", roleId));
+        if (ObjectUtil.isNull(roleOne)) {
+            throw new ApiException("该角色不存在");
+        }
+        UmsAdminRoleRelation relation = new UmsAdminRoleRelation();
+        relation.setAdminId(adminId);
+        relation.setRoleId(roleId);
+        UmsAdminRoleRelation one = this.getOne(new QueryWrapper<>(relation));
+        if (!ObjectUtil.isNotNull(one)) {
+            throw new ApiException("该用户未拥有此权限");
+        }
+        return this.remove(new QueryWrapper<>(relation));
+    }
 }
