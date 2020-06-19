@@ -92,6 +92,14 @@ public class UmsAdminController {
         return CommonResult.OK(vo);
     }
 
+    @ApiOperation("查询登入的管理员详细信息")
+    @GetMapping("/detail")
+    public CommonResult<UmsAdminVo> detail() {
+        UmsAdmin admin =  adminService.getCurrentAdmin();
+        UmsAdminVo vo = BeanUtil.copyProperties(admin, UmsAdminVo.class);
+        return CommonResult.OK(vo);
+    }
+
     @ApiOperation("模糊搜索分页获取用户列表")
     @GetMapping("/users/search")
     public CommonResult<Page<UmsAdminVo>> search(UmsAdminSearchParam adminSearchParam) {

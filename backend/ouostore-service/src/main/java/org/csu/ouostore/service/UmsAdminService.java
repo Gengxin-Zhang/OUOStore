@@ -77,4 +77,9 @@ public interface UmsAdminService extends IService<UmsAdmin> {
      * 获取用户所有角色
      */
     List<UmsRole> getRoleList(Long adminId);
+
+    /**
+     * 获取当前管理员
+     */
+    UmsAdmin getCurrentAdmin();
 }

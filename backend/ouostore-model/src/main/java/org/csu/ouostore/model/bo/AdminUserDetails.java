@@ -61,4 +61,7 @@ public class AdminUserDetails implements UserDetails {
         return umsAdmin.getStatus().equals(1);
     }
 
+    public UmsAdmin getUmsAdmin() {
+        return umsAdmin;
+    }
 }

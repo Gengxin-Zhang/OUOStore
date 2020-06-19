@@ -26,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -156,6 +158,18 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     @Override
     public List<UmsRole> getRoleList(Long adminId) {
         return adminMapper.getRoleList(adminId);
+    }
+
+    @Override
+    public UmsAdmin getCurrentAdmin() {
+        SecurityContext ctx = SecurityContextHolder.getContext();
+        Authentication auth = ctx.getAuthentication();
+        try {
+            AdminUserDetails adminUserDetails = (AdminUserDetails) auth.getPrincipal();
+            return adminUserDetails.getUmsAdmin();
+        } catch (ClassCastException ex) {
+            throw new ApiException("token无效或过期");
+        }
     }
 
     /**
