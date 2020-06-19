@@ -1,15 +1,16 @@
 package org.csu.ouostore.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -42,7 +43,7 @@ public class UmsMember implements Serializable {
     @ApiModelProperty(value = "手机号码")
     private String phone;
 
-    @ApiModelProperty(value = "帐号启用状态:0->禁用；1->启用")
+    @ApiModelProperty(value = "帐号启用状态:0->禁用；1->启用;2->需完善信息")
     private Integer status;
 
     @ApiModelProperty(value = "注册时间")

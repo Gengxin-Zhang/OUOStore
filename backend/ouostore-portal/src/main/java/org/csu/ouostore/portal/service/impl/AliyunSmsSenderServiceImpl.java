@@ -9,12 +9,14 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import lombok.extern.slf4j.Slf4j;
+import org.csu.ouostore.common.exception.ApiException;
 import org.csu.ouostore.model.query.CaptchaQueryParam;
 import org.csu.ouostore.portal.service.AliyunSmsSenderService;
 import org.csu.ouostore.service.RedisService;
 import org.csu.ouostore.service.UmsMemberService;
 import org.csu.ouostore.service.config.AliyunSMSConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -29,8 +31,10 @@ public class AliyunSmsSenderServiceImpl implements AliyunSmsSenderService {
 
     @Autowired
     private UmsMemberService memberService;
+    @Value("${redis.key.digits}")
+    private String REDIS_KEY_DIGITS;
 
-    private static final Long AUTH_CODE_EXPIRE_SECONDS = 120L;
+    private static final Long AUTH_CODE_EXPIRE_SECONDS = 15 * 60L;
 
     /**
      * @Description: 对接阿里云短信服务实现短信发送
@@ -56,12 +60,14 @@ public class AliyunSmsSenderServiceImpl implements AliyunSmsSenderService {
         request.setSignName("OUOStore");
         //必填:短信模板-可在短信控制台中找到，发送国际/港澳台消息时，请使用国际/港澳台短信模版
         //注册模板
-        if (queryParam.getType().equals("0")) {
+        if ("0".equals(queryParam.getType())) {
             request.setTemplateCode("SMS_187951460");
         }
         //重置密码模板
-        else {
+        else if ("1".equals(queryParam.getType())) {
             request.setTemplateCode("SMS_187941353");
+        } else {
+            throw new ApiException("type非法");
         }
 
         //生成6位的动态验证码
@@ -71,14 +77,13 @@ public class AliyunSmsSenderServiceImpl implements AliyunSmsSenderService {
 
         //请求失败这里会抛ClientException异常
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        if (sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
+        if (sendSmsResponse.getCode() != null && "OK".equals(sendSmsResponse.getCode())) {
             //请求成功
-            redisService.set(queryParam.getPhone(), captcha);
+            redisService.set(REDIS_KEY_DIGITS + ":" + queryParam.getPhone(), captcha);
             redisService.expire(captcha, AUTH_CODE_EXPIRE_SECONDS);
-//            System.out.println(redisService.get(queryParam.getPhone())+ " 缓存成功 ");
         } else {
-            System.out.println("失败状态" + sendSmsResponse.getCode());
-            System.out.println("失败原因" + sendSmsResponse.getMessage());
+            log.warn("发送短信失败状态:" + sendSmsResponse.getCode());
+            log.warn("发送短信失败原因:" + sendSmsResponse.getMessage());
         }
         return sendSmsResponse;
     }

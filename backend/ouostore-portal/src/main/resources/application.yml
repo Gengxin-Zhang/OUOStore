@@ -60,6 +60,7 @@ redis:
   database: ouostore
   key:
     orderId: 'oms:orderId'
+    digits: 'sms:digits'
 
 
 mybatis-plus:

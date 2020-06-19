@@ -13,22 +13,17 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @Description: 测试发送短信controller
  */
-@Api("短信发送")
+@Api(tags = "短信发送")
 @RestController
+@RequestMapping("/api/v1")
 public class SmsController {
 
     @Autowired
     AliyunSmsSenderService smsSenderService;
 
-    /**
-     * @Description: 短信发送
-     */
     @ApiOperation("向手机号发送验证码")
     @PostMapping("/sms")
-    @ResponseBody
-    public CommonResult sms(@RequestBody CaptchaQueryParam queryParam) throws ClientException {
-        System.out.println(queryParam.getPhone());
-        System.out.println(queryParam.getType());
+    public CommonResult<SendSmsResponse> sms(@RequestBody CaptchaQueryParam queryParam) throws ClientException {
         SendSmsResponse sendSmsResponse = smsSenderService.sendSms(queryParam);
         return CommonResult.OK(sendSmsResponse);
     }

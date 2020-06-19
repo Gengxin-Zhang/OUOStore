@@ -9,9 +9,9 @@ import lombok.Data;
 @ApiModel(description = "手机验证码参数")
 public class CaptchaQueryParam {
 
-    @ApiModelProperty(value = "发送手机号")
+    @ApiModelProperty(value = "发送手机号", example = "17777777777")
     private String phone;
 
-    @ApiModelProperty(value = "发送验证码类型：0->注册，1->重置密码")
+    @ApiModelProperty(value = "发送验证码类型：0->注册，1->重置密码", example = "0")
     private String type;
 }

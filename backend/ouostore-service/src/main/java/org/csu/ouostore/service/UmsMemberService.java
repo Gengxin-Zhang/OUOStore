@@ -3,7 +3,7 @@ package org.csu.ouostore.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.csu.ouostore.model.dto.JwtDto;
 import org.csu.ouostore.model.entity.UmsMember;
-import org.csu.ouostore.model.query.UmsMemberPatchParam;
+import org.csu.ouostore.model.query.UmsMemberCompleteParam;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,21 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
  * @author zack
  * @since 2020-04-09
  */
+@Transactional
 public interface UmsMemberService extends IService<UmsMember> {
 
-//    /**
-//     * 登入
-//     * @param username 用户名
-//     * @param password 密码
-//     * @return 生成的JWT的token
-//     */
-//    JwtDto signIn(String username, String password);
-
     /**
-     * 注册
+     * 注册或登入
      * @return 生成的JWT的token
      */
-    JwtDto SignUp(String telephone, String authCode);
+    JwtDto sign(String telephone, String authCode);
 
     /**
      * 根据用户名获取会员
@@ -66,6 +59,6 @@ public interface UmsMemberService extends IService<UmsMember> {
     /**
      * 修改用户信息
      */
-    boolean patch(UmsMemberPatchParam param);
+    boolean patch(UmsMemberCompleteParam param);
 
 }
