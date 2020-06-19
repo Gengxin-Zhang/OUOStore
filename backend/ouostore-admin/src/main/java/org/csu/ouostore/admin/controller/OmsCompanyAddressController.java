@@ -6,10 +6,7 @@ import org.csu.ouostore.common.api.CommonResult;
 import org.csu.ouostore.model.entity.OmsCompanyAddress;
 import org.csu.ouostore.service.OmsCompanyAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
