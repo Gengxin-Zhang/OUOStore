@@ -74,6 +74,7 @@ public class UmsAdminController {
     @PutMapping("/users/{id}")
     public CommonResult<String> update(@PathVariable Long id, @RequestBody UmsAdminSignUpParam adminSignUpParam) {
         UmsAdmin admin = new UmsAdmin();
+        admin.setId(id);
         BeanUtil.copyProperties(adminSignUpParam, admin);
         boolean success = adminService.updateById(admin);
         return success ? CommonResult.OK("更新成功") : CommonResult.failed("id不存在");
