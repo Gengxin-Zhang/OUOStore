@@ -15,6 +15,7 @@ import org.csu.ouostore.model.entity.UmsRole;
 import org.csu.ouostore.model.query.UmsAdminSearchParam;
 import org.csu.ouostore.model.query.UmsAdminSignInParam;
 import org.csu.ouostore.model.query.UmsAdminSignUpParam;
+import org.csu.ouostore.model.vo.UmsAdminDetailVo;
 import org.csu.ouostore.model.vo.UmsAdminVo;
 import org.csu.ouostore.service.UmsAdminRoleRelationService;
 import org.csu.ouostore.service.UmsAdminService;
@@ -94,9 +95,8 @@ public class UmsAdminController {
 
     @ApiOperation("查询登入的管理员详细信息")
     @GetMapping("/detail")
-    public CommonResult<UmsAdminVo> detail() {
-        UmsAdmin admin =  adminService.getCurrentAdmin();
-        UmsAdminVo vo = BeanUtil.copyProperties(admin, UmsAdminVo.class);
+    public CommonResult<UmsAdminDetailVo> detail() {
+        UmsAdminDetailVo vo = adminService.detail();
         return CommonResult.OK(vo);
     }
 

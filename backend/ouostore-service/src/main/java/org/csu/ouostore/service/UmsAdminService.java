@@ -9,6 +9,7 @@ import org.csu.ouostore.model.entity.UmsResource;
 import org.csu.ouostore.model.entity.UmsRole;
 import org.csu.ouostore.model.query.UmsAdminSearchParam;
 import org.csu.ouostore.model.query.UmsAdminSignUpParam;
+import org.csu.ouostore.model.vo.UmsAdminDetailVo;
 import org.csu.ouostore.model.vo.UmsAdminVo;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -82,4 +83,9 @@ public interface UmsAdminService extends IService<UmsAdmin> {
      * 获取当前管理员
      */
     UmsAdmin getCurrentAdmin();
+
+    /**
+     * 获取当前用户所有详细信息
+     */
+    UmsAdminDetailVo detail();
 }

@@ -17,11 +17,14 @@ import org.csu.ouostore.model.dto.JwtDto;
 import org.csu.ouostore.model.entity.*;
 import org.csu.ouostore.model.query.UmsAdminSearchParam;
 import org.csu.ouostore.model.query.UmsAdminSignUpParam;
+import org.csu.ouostore.model.vo.UmsAdminDetailVo;
 import org.csu.ouostore.model.vo.UmsAdminVo;
+import org.csu.ouostore.model.vo.UmsMenuNodeVo;
 import org.csu.ouostore.security.util.JwtUtil;
 import org.csu.ouostore.service.UmsAdminLoginLogService;
 import org.csu.ouostore.service.UmsAdminRoleRelationService;
 import org.csu.ouostore.service.UmsAdminService;
+import org.csu.ouostore.service.UmsRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -40,6 +43,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,6 +72,8 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     UmsAdminService adminService;
     @Autowired
     UmsAdminRoleRelationService adminRoleRelationService;
+    @Autowired
+    UmsRoleService roleService;
     @Value("${jwt.expiration}")
     private Long expiration;
 
@@ -170,6 +176,33 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
         } catch (ClassCastException ex) {
             throw new ApiException("token无效或过期");
         }
+    }
+
+    @Override
+    public UmsAdminDetailVo detail() {
+        UmsAdmin admin =  adminService.getCurrentAdmin();
+        if (admin == null) {
+            throw new ApiException("token无效或过期");
+        }
+        List<UmsAdminRoleRelation> relations = adminRoleRelationService.list(new QueryWrapper<UmsAdminRoleRelation>()
+                .eq("admin_id", admin.getId()));
+        //角色
+        ArrayList<UmsRole> roles = new ArrayList<>();
+        //菜单
+        ArrayList<UmsMenuNodeVo> menuNodeVos = new ArrayList<>();
+        //资源(api)
+        ArrayList<UmsResource> resources = new ArrayList<>();
+        //查询用户拥有的所有资源
+        for (UmsAdminRoleRelation relation : relations) {
+            menuNodeVos.addAll(roleService.listMenu(relation.getRoleId()));
+            resources.addAll(roleService.listResource(relation.getRoleId()));
+            roles.add(roleService.getById(relation.getId()));
+        }
+        UmsAdminDetailVo vo = BeanUtil.copyProperties(admin, UmsAdminDetailVo.class);
+        vo.setRoles(roles);
+        vo.setMenus(menuNodeVos);
+        vo.setResources(resources);
+        return vo;
     }
 
     /**
