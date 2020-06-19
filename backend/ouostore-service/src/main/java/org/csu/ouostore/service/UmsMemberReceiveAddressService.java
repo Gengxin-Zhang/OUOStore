@@ -2,6 +2,7 @@ package org.csu.ouostore.service;
 
 import org.csu.ouostore.model.entity.UmsMemberReceiveAddress;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @author zack
  * @since 2020-04-09
  */
+@Transactional
 public interface UmsMemberReceiveAddressService extends IService<UmsMemberReceiveAddress> {
     /**
      * 添加收货地址
@@ -22,15 +24,17 @@ public interface UmsMemberReceiveAddressService extends IService<UmsMemberReceiv
     /**
      * 删除收货地址
      * @param id 地址表的id
+     * @return
      */
-    int delete(Long id);
+    boolean delete(Long id);
 
     /**
      * 修改收货地址
      * @param id 地址表的id
      * @param address 修改的收货地址信息
+     * @return
      */
-    int update(Long id, UmsMemberReceiveAddress address);
+    boolean update(Long id, UmsMemberReceiveAddress address);
 
     /**
      * 返回当前用户的收货地址
