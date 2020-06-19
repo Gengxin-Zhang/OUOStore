@@ -34,7 +34,7 @@ public class OmsCompanyAddressController {
 
     @ApiOperation("添加发货地址")
     @PostMapping(value = "")
-    public CommonResult<String> create(OmsCompanyAddress address) {
+    public CommonResult<String> create(@RequestBody OmsCompanyAddress address) {
         boolean success = companyAddressService.save(address);
         return success ? CommonResult.OK("创建成功") : CommonResult.failed("创建失败,未知错误");
     }
