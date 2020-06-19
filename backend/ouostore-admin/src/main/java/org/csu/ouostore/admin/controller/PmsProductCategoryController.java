@@ -38,6 +38,7 @@ public class PmsProductCategoryController {
             return CommonResult.failed("分类名重复,创建失败");
         }
         PmsProductCategory category1 = BeanUtil.copyProperties(productCategoryParam, PmsProductCategory.class);
+        category1.setProductCount(0);
         boolean success = productCategoryService.save(category1);
         return success ? CommonResult.OK("创建成功") : CommonResult.failed("创建失败,未知错误");
     }
