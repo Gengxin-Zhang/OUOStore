@@ -70,7 +70,7 @@ public class PmsProductCategoryController {
     }
 
     @ApiOperation("删除商品分类")
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     public CommonResult<String> delete(@PathVariable Long id) {
         boolean success = productCategoryService.removeById(id);
         return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,未知错误");

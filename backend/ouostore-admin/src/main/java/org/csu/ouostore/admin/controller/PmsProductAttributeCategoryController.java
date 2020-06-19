@@ -61,7 +61,7 @@ public class PmsProductAttributeCategoryController {
     @DeleteMapping(value = "/{id}")
     public CommonResult<String> delete(@PathVariable Long id) {
         boolean success = productAttributeCategoryService.removeById(id);
-        return success ? CommonResult.OK("修改成功") : CommonResult.failed("修改失败,未知错误");
+        return success ? CommonResult.OK("删除成功") : CommonResult.failed("删除失败,未知错误");
     }
 
     @ApiOperation("获取单个商品属性分类及其下属性和规格信息")
