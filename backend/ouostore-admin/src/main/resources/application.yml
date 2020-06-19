@@ -40,3 +40,4 @@ redis:
   database: ouostore
   key:
     orderId: 'oms:orderId'
+    digits: 'digits'
