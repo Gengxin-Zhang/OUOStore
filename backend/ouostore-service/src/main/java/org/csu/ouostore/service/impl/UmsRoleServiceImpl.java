@@ -90,6 +90,7 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
         roleResourceRelationService.remove(new QueryWrapper<UmsRoleResourceRelation>().eq("role_id", id));
         roleMenuRelationService.remove(new QueryWrapper<UmsRoleMenuRelation>().eq("role_id", id));
         adminRoleRelationService.remove(new QueryWrapper<UmsAdminRoleRelation>().eq("role_id", id));
+        this.removeById(id);
         return true;
     }
 
