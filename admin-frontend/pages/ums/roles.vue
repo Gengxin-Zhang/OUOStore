@@ -1,0 +1,227 @@
+<template>
+  <div class="rolesPage">
+    <a-breadcrumb style="margin-bottom: .7rem">
+      <a-breadcrumb-item>
+        <nuxt-link to="/">首页</nuxt-link>
+      </a-breadcrumb-item>
+      <a-breadcrumb-item>
+        <nuxt-link to="/ums">权限</nuxt-link>
+      </a-breadcrumb-item>
+      <a-breadcrumb-item>角色管理</a-breadcrumb-item>
+    </a-breadcrumb>
+    <card title="角色管理">
+      <div slot="body">
+        <div class="actions">
+          <a-button type="primary" @click="handleAddRole">添加角色</a-button>
+        </div>
+        <a-table
+          :columns="columns"
+          :row-key="record => record.id"
+          :data-source="data"
+          :pagination="pagination"
+          :loading="loading"
+          @change="handleTableChange"
+        >
+          <template slot="actions" slot-scope="role">
+            <a-button size="small">管理菜单</a-button>
+            <a-button size="small">分配资源</a-button>
+            <br />
+            <a-button size="small" type="primary" @click="handleUpdateRole(role)">修改</a-button>
+            <a-button size="small" type="danger" @click="handleDeleteRole(role)">删除</a-button>
+          </template>
+        </a-table>
+      </div>
+    </card>
+    <a-modal
+      v-model="showEditRoleModal"
+      :title="editingRole?`修改角色「${targetRole.name}」`:'新建角色'"
+      @ok="handleRoleSubmit"
+    >
+      <a-form
+        :form="roleForm"
+        :label-col="{ span: 5 }"
+        :wrapper-col="{ span: 12 }"
+        @submit="handleRoleSubmit"
+      >
+        <a-form-item label="角色名">
+          <a-input
+            v-decorator="['name', { rules: [{ required: true, message: '请输入角色名' }], initialValue: targetRole.name }]"
+          />
+        </a-form-item>
+        <a-form-item label="描述">
+          <a-input
+            v-decorator="['description', { rules: [{ required: true, message: '请输入角色描述' }], initialValue: targetRole.description }]"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <a-modal v-model="showEditMenuModel"></a-modal>
+  </div>
+</template>
+
+<script>
+import card from "~/components/card";
+import { mapActions } from "Vuex";
+const columns = [
+  {
+    title: "编号",
+    dataIndex: "id",
+    width: "10%"
+  },
+  {
+    title: "名称",
+    dataIndex: "name",
+    width: "20%"
+  },
+  {
+    title: "描述",
+    dataIndex: "description",
+    width: "20%"
+  },
+  {
+    title: "用户数",
+    dataIndex: "adminCount"
+  },
+  {
+    title: "创建时间",
+    dataIndex: "createTime"
+  },
+  {
+    title: "操作",
+    key: "actions",
+    scopedSlots: { customRender: "actions" }
+  }
+];
+export default {
+  components: {
+    card
+  },
+  data() {
+    return {
+      columns,
+      pagination: {},
+      loading: false,
+      data: [],
+      editingRole: false,
+      addingRole: false,
+      showEditRoleModal: false,
+      showEditMenuModel: false,
+      targetRole: {},
+      roleForm: this.$form.createForm(this, { name: "coordinated" })
+    };
+  },
+  watch: {
+    editingRole(value) {
+      this.showEditRoleModal = value;
+    },
+    addingRole(value) {
+      this.showEditRoleModal = value;
+    },
+    showEditRoleModal(value) {
+      if (value === false) {
+        this.addingRole = false;
+        this.editingRole = false;
+      }
+    }
+  },
+  mounted() {
+    this.fetch();
+  },
+  methods: {
+    ...mapActions({
+      getRoles: "User/getRoles",
+      updateRole: "User/updateRole",
+      deleteRole: "User/deleteRole",
+      addRole: "User/addRole"
+    }),
+    handleTableChange() {
+      this.fetch();
+    },
+    fetch() {
+      this.getRoles({})
+        .then(res => {
+          console.log(res);
+          this.data = res.records;
+        })
+        .catch(err => {
+          this.$message.error(err);
+        });
+    },
+    handleUpdateRole(role) {
+      this.targetRole = role;
+      this.editingRole = true;
+    },
+    handleDeleteRole(role) {
+      let that = this;
+      this.$confirm({
+        title: `确定删除角色「${role.name}」？`,
+        content: h => <div style="color:red;">数据删除后不可恢复</div>,
+        onOk() {
+          that
+            .deleteRole(role.id)
+            .then(res => {
+              that.$message.success(res);
+              that.fetch();
+            })
+            .catch(err => {
+              that.$message.error(err);
+            });
+        },
+        onCancel() {}
+      });
+    },
+    handleAddRole() {
+      this.targetRole = {
+        name: "",
+        description: ""
+      };
+      this.addingRole = true;
+    },
+    handleRoleSubmit(e) {
+      this.roleForm.validateFields((err, values) => {
+        if (!err) {
+          values.sort = 0;
+          values.status = 1;
+          values.id = this.targetRole.id;
+          if (this.targetRole.id) {
+            this.updateRole(values)
+              .then(res => {
+                this.$message.success("更新成功");
+                this.editingRole = false;
+                this.fetch();
+              })
+              .catch(err => {
+                this.$message.error(err);
+              });
+          } else {
+            this.addRole(values)
+              .then(res => {
+                this.$message.success("添加成功");
+                this.addingRole = false;
+                this.fetch();
+              })
+              .catch(err => {
+                this.$message.error(err);
+              });
+          }
+        } else {
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.rolesPage {
+  width: 100%;
+  padding: 1rem 2rem;
+  .actions {
+    position: absolute;
+    width: 100%;
+    text-align: right;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+}
+</style>
