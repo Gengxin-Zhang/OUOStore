@@ -35,6 +35,7 @@
         <hutool-all.version>5.2.5</hutool-all.version>
         <alipay-sdk-java.version>4.9.124.ALL</alipay-sdk-java.version>
         <IJPay-AliPay.version>2.5.2</IJPay-AliPay.version>
+        <aliyun-sdk-oss.version>3.8.0</aliyun-sdk-oss.version>
     </properties>
 
     <modules>
@@ -202,6 +203,12 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
             <version>5.2.0</version>
+        </dependency>
+        <!--阿里云oss依赖-->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun-sdk-oss.version}</version>
         </dependency>
     </dependencies>
 
