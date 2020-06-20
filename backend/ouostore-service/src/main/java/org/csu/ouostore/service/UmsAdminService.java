@@ -11,6 +11,7 @@ import org.csu.ouostore.model.query.UmsAdminSearchParam;
 import org.csu.ouostore.model.query.UmsAdminSignUpParam;
 import org.csu.ouostore.model.vo.UmsAdminDetailVo;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ import java.util.List;
  * @author zack
  * @since 2020-04-09
  */
+@Transactional
 public interface UmsAdminService extends IService<UmsAdmin> {
 
     /**

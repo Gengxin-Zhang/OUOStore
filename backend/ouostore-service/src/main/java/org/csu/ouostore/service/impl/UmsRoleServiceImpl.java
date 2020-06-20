@@ -87,6 +87,10 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
 
     @Override
     public boolean delete(Long id) {
+        int count = this.count();
+        if (count <= 1) {
+            throw new ApiException("不允许删除所有角色");
+        }
         roleResourceRelationService.remove(new QueryWrapper<UmsRoleResourceRelation>().eq("role_id", id));
         roleMenuRelationService.remove(new QueryWrapper<UmsRoleMenuRelation>().eq("role_id", id));
         adminRoleRelationService.remove(new QueryWrapper<UmsAdminRoleRelation>().eq("role_id", id));

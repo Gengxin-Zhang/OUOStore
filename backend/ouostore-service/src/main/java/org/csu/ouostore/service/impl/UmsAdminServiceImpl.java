@@ -37,7 +37,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -142,8 +141,14 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     }
 
     @Override
-    @Transactional
     public boolean delete(Long id) {
+        if (adminService.getCurrentAdmin().getId().equals(id)) {
+            throw new ApiException("不允许删除自己");
+        }
+        int count = adminService.count();
+        if (count <= 1) {
+            throw new ApiException("不允许删除所有用户");
+        }
         adminService.removeById(id);
         adminRoleRelationService.remove(new QueryWrapper<UmsAdminRoleRelation>().eq("admin_id", id));
         return true;
