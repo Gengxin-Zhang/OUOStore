@@ -11,12 +11,15 @@ import org.csu.ouostore.common.api.CommonResult;
 import org.csu.ouostore.common.exception.ApiException;
 import org.csu.ouostore.model.dto.JwtDto;
 import org.csu.ouostore.model.entity.UmsAdmin;
+import org.csu.ouostore.model.entity.UmsAdminLoginLog;
 import org.csu.ouostore.model.entity.UmsRole;
+import org.csu.ouostore.model.query.UmsAdminLogsQueryParam;
 import org.csu.ouostore.model.query.UmsAdminSearchParam;
 import org.csu.ouostore.model.query.UmsAdminSignInParam;
 import org.csu.ouostore.model.query.UmsAdminSignUpParam;
 import org.csu.ouostore.model.vo.UmsAdminDetailVo;
 import org.csu.ouostore.model.vo.UmsAdminVo;
+import org.csu.ouostore.service.UmsAdminLoginLogService;
 import org.csu.ouostore.service.UmsAdminRoleRelationService;
 import org.csu.ouostore.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,8 @@ public class UmsAdminController {
     private UmsAdminService adminService;
     @Autowired
     private UmsAdminRoleRelationService adminRoleRelationService;
+    @Autowired
+    private UmsAdminLoginLogService adminLoginLogService;
 
     @ApiOperation(value = "登入并获取token")
     @PostMapping("/oauth/access_token")
@@ -129,5 +134,29 @@ public class UmsAdminController {
         return CommonResult.OK(roleList);
     }
 
+//    @ApiOperation("查询指定用户的日志")
+//    @GetMapping("/{adminId}/login_logs")
+//    public CommonResult<List<UmsAdminLoginLog>> getOneLoginLogs(@PathVariable Long adminId) {
+//        List<UmsAdminLoginLog> logs = adminLoginLogService.list(
+//                new QueryWrapper<UmsAdminLoginLog>().eq("admin_id", adminId));
+//        return CommonResult.OK(logs);
+//    }
+
+    @ApiOperation("分页查询日志")
+    @PostMapping("/login_logs")
+    public CommonResult<Page<UmsAdminLoginLog>> getLoginLogs(@RequestBody UmsAdminLogsQueryParam param) {
+        Page<UmsAdminLoginLog> page = new Page<>();
+        page.setCurrent(param.getPage());
+        page.setSize(param.getPerPage());
+        if (param.getDescByTime()) {
+            page.setDesc("create_time");
+        }
+        QueryWrapper<UmsAdminLoginLog> wrapper = new QueryWrapper<>();
+        if (param.getAdminId() != null) {
+            wrapper.eq("admin_id", param.getAdminId());
+        }
+        adminLoginLogService.page(page, wrapper);
+        return CommonResult.OK(page);
+    }
 }
 
