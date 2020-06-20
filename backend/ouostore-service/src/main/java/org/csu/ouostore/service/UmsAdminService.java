@@ -10,7 +10,6 @@ import org.csu.ouostore.model.entity.UmsRole;
 import org.csu.ouostore.model.query.UmsAdminSearchParam;
 import org.csu.ouostore.model.query.UmsAdminSignUpParam;
 import org.csu.ouostore.model.vo.UmsAdminDetailVo;
-import org.csu.ouostore.model.vo.UmsAdminVo;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -72,7 +71,7 @@ public interface UmsAdminService extends IService<UmsAdmin> {
      * @param adminSearchParam 查询条件
      * @return 分页对象
      */
-    IPage<UmsAdminVo> selectResourcePage(Page<UmsAdminVo> page, UmsAdminSearchParam adminSearchParam);
+    IPage<UmsAdminDetailVo> selectResourcePage(Page<UmsAdminDetailVo> page, UmsAdminSearchParam adminSearchParam);
 
     /**
      * 获取用户所有角色

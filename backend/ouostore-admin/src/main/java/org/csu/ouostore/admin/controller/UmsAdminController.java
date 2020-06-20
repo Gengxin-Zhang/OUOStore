@@ -102,8 +102,8 @@ public class UmsAdminController {
 
     @ApiOperation("模糊搜索分页获取用户列表")
     @GetMapping("/users/search")
-    public CommonResult<Page<UmsAdminVo>> search(UmsAdminSearchParam adminSearchParam) {
-        Page<UmsAdminVo> page = new Page<>();
+    public CommonResult<Page<UmsAdminDetailVo>> search(UmsAdminSearchParam adminSearchParam) {
+        Page<UmsAdminDetailVo> page = new Page<>();
         adminService.selectResourcePage(page, adminSearchParam);
         return CommonResult.OK(page);
     }

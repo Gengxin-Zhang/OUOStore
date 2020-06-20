@@ -150,14 +150,38 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     }
 
     @Override
-    public IPage<UmsAdminVo> selectResourcePage(Page<UmsAdminVo> page, UmsAdminSearchParam adminSearchParam) {
+    public IPage<UmsAdminDetailVo> selectResourcePage(Page<UmsAdminDetailVo> page, UmsAdminSearchParam adminSearchParam) {
         page.setCurrent(adminSearchParam.getPage());
         page.setSize(adminSearchParam.getPerPage());
         QueryWrapper<UmsAdmin> wrapper = new QueryWrapper<UmsAdmin>()
                 .like(StrUtil.isNotBlank(adminSearchParam.getUserNameKeyword()), "username", adminSearchParam.getUserNameKeyword())
                 .like(StrUtil.isNotBlank(adminSearchParam.getNickNameKeyword()), "nick_name", adminSearchParam.getNickNameKeyword())
                 .like(StrUtil.isNotBlank(adminSearchParam.getEmailKeyword()), "email", adminSearchParam.getEmailKeyword());
-        adminMapper.selectPageVo(page, wrapper);
+        Page<UmsAdminVo> adminVoPage = new Page<>();
+        page.setRecords(new ArrayList<UmsAdminDetailVo>());
+        adminMapper.selectPageVo(adminVoPage, wrapper);
+        BeanUtil.copyProperties(adminVoPage, page, "records");
+        for (UmsAdminVo vo : adminVoPage.getRecords()) {
+            List<UmsAdminRoleRelation> relations = adminRoleRelationService.list(new QueryWrapper<UmsAdminRoleRelation>()
+                    .eq("admin_id", vo.getId()));
+            //角色
+            ArrayList<UmsRole> roles = new ArrayList<>();
+            //菜单
+            ArrayList<UmsMenuNodeVo> menuNodeVos = new ArrayList<>();
+            //资源(api)
+            ArrayList<UmsResource> resources = new ArrayList<>();
+            //查询用户拥有的所有资源
+            for (UmsAdminRoleRelation relation : relations) {
+                menuNodeVos.addAll(roleService.listMenu(relation.getRoleId()));
+                resources.addAll(roleService.listResource(relation.getRoleId()));
+                roles.add(roleService.getById(relation.getRoleId()));
+            }
+            UmsAdminDetailVo vo1 = BeanUtil.copyProperties(vo, UmsAdminDetailVo.class);
+            vo1.setResources(resources);
+            vo1.setRoles(roles);
+            vo1.setMenus(menuNodeVos);
+            page.getRecords().add(vo1);
+        }
         return page;
     }
 
@@ -196,7 +220,7 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
         for (UmsAdminRoleRelation relation : relations) {
             menuNodeVos.addAll(roleService.listMenu(relation.getRoleId()));
             resources.addAll(roleService.listResource(relation.getRoleId()));
-            roles.add(roleService.getById(relation.getId()));
+            roles.add(roleService.getById(relation.getRoleId()));
         }
         UmsAdminDetailVo vo = BeanUtil.copyProperties(admin, UmsAdminDetailVo.class);
         vo.setRoles(roles);
