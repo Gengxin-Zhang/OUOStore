@@ -47,6 +47,8 @@ public class UmsAdminRoleRelationServiceImpl extends ServiceImpl<UmsAdminRoleRel
         if (ObjectUtil.isNotNull(one)) {
             throw new ApiException("该用户已拥有此权限");
         }
+        roleOne.setAdminCount(roleOne.getAdminCount() + 1);
+        roleService.updateById(roleOne);
         return this.save(relation);
     }
 
@@ -67,6 +69,12 @@ public class UmsAdminRoleRelationServiceImpl extends ServiceImpl<UmsAdminRoleRel
         if (!ObjectUtil.isNotNull(one)) {
             throw new ApiException("该用户未拥有此权限");
         }
+        if (roleOne.getAdminCount() > 0) {
+            roleOne.setAdminCount(roleOne.getAdminCount() - 1);
+        } else {
+            roleOne.setAdminCount(0);
+        }
+        roleService.updateById(roleOne);
         return this.remove(new QueryWrapper<>(relation));
     }
 }
