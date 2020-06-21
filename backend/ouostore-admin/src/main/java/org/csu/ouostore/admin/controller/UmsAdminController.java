@@ -79,6 +79,12 @@ public class UmsAdminController {
     @ApiOperation("更新指定后台用户")
     @PutMapping("/users/{id}")
     public CommonResult<String> update(@PathVariable Long id, @RequestBody UmsAdminSignUpParam adminSignUpParam) {
+        if (adminSignUpParam.getEmail() != null) {
+            UmsAdmin one = adminService.getOne(new QueryWrapper<UmsAdmin>().eq("email", adminSignUpParam.getEmail()).last("limit 1"));
+            if (one != null) {
+                throw new ApiException("邮箱重复");
+            }
+        }
         UmsAdmin admin = new UmsAdmin();
         admin.setId(id);
         BeanUtil.copyProperties(adminSignUpParam, admin);

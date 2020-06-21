@@ -130,6 +130,12 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
         if (ObjectUtil.isNotNull(one)) {
             throw new ApiException("用户名重复");
         }
+        if (adminSignUpParam.getEmail() != null) {
+            one = this.getOne(new QueryWrapper<UmsAdmin>().eq("email", adminSignUpParam.getEmail()).last("limit 1"));
+            if (one != null) {
+                throw new ApiException("邮箱重复");
+            }
+        }
         UmsAdmin umsAdmin = new UmsAdmin();
         BeanUtil.copyProperties(adminSignUpParam, umsAdmin);
         umsAdmin.setCreateTime(LocalDateTime.now());
