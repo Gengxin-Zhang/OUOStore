@@ -6,7 +6,7 @@
 
 ### 项目演示
 
-前端地址：https://github.com/Gengxin-Zhang/OUOStore/frontend
+前端地址：https://github.com/Gengxin-Zhang/OUOStore/admin-frontend
 
 后端地址：https://github.com/Gengxin-Zhang/OUOStore/backend
 
@@ -14,13 +14,14 @@
 
 项目演示地址： [http://39.97.237.153/admin/index.html](http://39.97.237.153/admin/index.html)  
 
-![后台管理系统功能演示.gif]()
+![后台管理系统功能演示.jpg](/images/admin.jpg)
+![后台管理系统功能演示.png](/images/user.jpg)
 
 #### 前台商城系统
 
 项目演示地址：[http://39.97.237.153/index.html](http://39.97.237.153/index.html)
 
-![前台商城系统功能演示.gif]()
+![前台商城系统功能演示.png]()
 
 ### 组织结构
 
@@ -40,7 +41,23 @@ backend
 
 #### 前端组织结构
 
-xxx
+```
+.
+├── README.md
+├── api -- AP 工厂
+├── assets -- 资源
+├── components -- 组建
+├── jsconfig.json 
+├── layouts -- 模板
+├── middleware -- 中间件
+├── nuxt.config.js
+├── package.json
+├── pages -- 页面
+├── plugins -- 插件
+├── server
+├── static -- 静态文件
+└── store -- vuex
+```
 
 ### 技术选型
 
