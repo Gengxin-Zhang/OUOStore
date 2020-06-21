@@ -6,12 +6,20 @@ export const state = () => ({
     user_id: "",
   },
   signed: false,
-  token: ""
+  token: "",
+  menus: [],
+  roles: []
 })
 
 export const mutations = {
   setUserInfo(state, user) {
-    state.info = user;
+    state.info = {
+      id: user.id,
+      name: user.username,
+      icon: user.icon
+    }
+    state.menus = user.menus.map(item => item.name)
+    state.roles = user.roles.map(item => item.id)
     state.signed = true;
   },
   setToken(state, token) {
@@ -26,6 +34,10 @@ export const mutations = {
       user_id: "",
     };
     state.signed = false;
+    localStorage.removeItem("token")
+  },
+  setMenus(state, menus) {
+    state.menus = menus
   }
 }
 
@@ -64,7 +76,7 @@ export const actions = {
     commit("setToken", token)
     return this.$api.auth.validToken(token).then(res => {
       if (res.data.status) {
-        commit("setUserInfo", res.data.data.user);
+        commit("setUserInfo", res.data.data);
         return Promise.resolve();
       } else {
         return Promise.reject(res.data.msg)
@@ -203,5 +215,96 @@ export const actions = {
     }).catch(err => {
       return Promise.reject(err)
     })
-  }
+  },
+  removeMenu({
+    commit
+  }, params) {
+    return this.$api.user.removeMenu(params.roleId, params.menuId).then(res => {
+      if (res.data.status) {
+        return Promise.resolve(res.data.data);
+      } else {
+        return Promise.reject(res.data.msg)
+      }
+    }).catch(err => {
+      return Promise.reject(err)
+    })
+  },
+  giveMenu({
+    commit
+  }, params) {
+    return this.$api.user.giveMenu(params.roleId, params.menuId).then(res => {
+      if (res.data.status) {
+        return Promise.resolve(res.data.data);
+      } else {
+        return Promise.reject(res.data.msg)
+      }
+    }).catch(err => {
+      return Promise.reject(err)
+    })
+  },
+  getMenusByRole({
+    commit
+  }, roleId) {
+    return this.$api.user.getMenusByRole(roleId).then(res => {
+      if (res.data.status) {
+        return Promise.resolve(res.data.data);
+      } else {
+        return Promise.reject(res.data.msg)
+      }
+    }).catch(err => {
+      return Promise.reject(err)
+    })
+  },
+  updateUser({
+    commit
+  }, params) {
+    return this.$api.user.updateUser(params.id, params).then(res => {
+      if (res.data.status) {
+        return Promise.resolve(res.data.data);
+      } else {
+        return Promise.reject(res.data.msg)
+      }
+    }).catch(err => {
+      return Promise.reject(err)
+    })
+  },
+  addUser({
+    commit
+  }, params) {
+    return this.$api.user.addUser(params).then(res => {
+      if (res.data.status) {
+        return Promise.resolve(res.data.data);
+      } else {
+        return Promise.reject(res.data.msg)
+      }
+    }).catch(err => {
+      return Promise.reject(err)
+    })
+  },
+  giveRole({
+    commit
+  }, params) {
+    return this.$api.user.giveRole(params.userId, params.roleId).then(res => {
+      if (res.data.status) {
+        return Promise.resolve(res.data.data);
+      } else {
+        return Promise.reject(res.data.msg)
+      }
+    }).catch(err => {
+      return Promise.reject(err)
+    })
+  },
+  removeRole({
+    commit
+  }, params) {
+    return this.$api.user.removeRole(params.userId, params.roleId).then(res => {
+      if (res.data.status) {
+        return Promise.resolve(res.data.data);
+      } else {
+        return Promise.reject(res.data.msg)
+      }
+    }).catch(err => {
+      return Promise.reject(err)
+    })
+  },
 }

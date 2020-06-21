@@ -11,6 +11,8 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@antv/g2": "^4.0.11",
+    "@antv/g2plot": "^1.1.7",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
     "ant-design-vue": "^1.1.10",

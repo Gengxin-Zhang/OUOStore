@@ -23,7 +23,7 @@
           @change="handleTableChange"
         >
           <template slot="actions" slot-scope="role">
-            <a-button size="small">管理菜单</a-button>
+            <a-button size="small" @click="handleEditMenu(role)">管理菜单</a-button>
             <a-button size="small">分配资源</a-button>
             <br />
             <a-button size="small" type="primary" @click="handleUpdateRole(role)">修改</a-button>
@@ -34,7 +34,7 @@
     </card>
     <a-modal
       v-model="showEditRoleModal"
-      :title="editingRole?`修改角色「${targetRole.name}」`:'新建角色'"
+      :title="editingRole?`修改角色「${targetRole?targetRole.name:''}」`:'新建角色'"
       @ok="handleRoleSubmit"
     >
       <a-form
@@ -55,7 +55,18 @@
         </a-form-item>
       </a-form>
     </a-modal>
-    <a-modal v-model="showEditMenuModel"></a-modal>
+    <a-modal v-model="showEditMenuModel" title="管理菜单" @ok="handleEditMenuOk">
+      <a-transfer
+        :dataSource="menus"
+        :titles="['未拥有', '已拥有']"
+        :targetKeys="targetKeys"
+        :checkedKeys="checkedMenuKeys"
+        :render="item => item.title"
+        @scroll="handleMenuScroll"
+        @change="handleMenuChange"
+        style="width: 100%"
+      />
+    </a-modal>
   </div>
 </template>
 
@@ -107,7 +118,10 @@ export default {
       showEditRoleModal: false,
       showEditMenuModel: false,
       targetRole: {},
-      roleForm: this.$form.createForm(this, { name: "coordinated" })
+      targetKeys: [],
+      checkedMenuKeys: [],
+      roleForm: this.$form.createForm(this, { name: "coordinated" }),
+      menus: []
     };
   },
   watch: {
@@ -132,7 +146,11 @@ export default {
       getRoles: "User/getRoles",
       updateRole: "User/updateRole",
       deleteRole: "User/deleteRole",
-      addRole: "User/addRole"
+      addRole: "User/addRole",
+      getMenus: "User/getMenus",
+      removeMenu: "User/removeMenu",
+      getMenusByRole: "User/getMenusByRole",
+      giveMenu: "User/giveMenu"
     }),
     handleTableChange() {
       this.fetch();
@@ -176,6 +194,67 @@ export default {
         description: ""
       };
       this.addingRole = true;
+    },
+    handleEditMenu(role) {
+      this.targetRole = role;
+
+      this.getMenus()
+        .then(res => {
+          this.menus = res.map(item => {
+            return {
+              key: item.id.toString(),
+              title: `${item.title}[${item.name}]`,
+              description: item.name,
+              disabled: false
+            };
+          });
+        })
+        .catch(err => {
+          this.$message.error(err);
+        });
+      console.log(role);
+      this.getMenusByRole(role.id)
+        .then(res => {
+          this.targetKeys = res.map(item => item.id.toString());
+          console.log(this.targetKeys);
+        })
+        .catch(err => {
+          this.$message.error(err);
+        });
+      this.showEditMenuModel = true;
+    },
+    handleEditMenuOk() {
+      this.targetRole = {};
+      this.showEditMenuModel = false;
+    },
+    handleMenuChange(nextTargetKeys, direction, moveKeys) {
+      moveKeys.forEach(item => {
+        if (direction === "right") {
+          this.giveMenu({ roleId: this.targetRole.id, menuId: item })
+            .then(res => {
+              this.targetKeys.push(item);
+            })
+            .catch(err => {
+              this.$message.error(err);
+            });
+        } else if (direction === "left") {
+          this.removeMenu({ roleId: this.targetRole.id, menuId: item })
+            .then(res => {
+              let index = this.targetKeys.indexOf(item);
+              if (index > -1) {
+                this.targetKeys.splice(index, 1);
+              }
+            })
+            .catch(err => {
+              this.$message.error(err);
+            });
+        }else{
+
+        }
+      });
+    },
+    handleMenuScroll(e) {
+      console.log(e);
     },
     handleRoleSubmit(e) {
       this.roleForm.validateFields((err, values) => {

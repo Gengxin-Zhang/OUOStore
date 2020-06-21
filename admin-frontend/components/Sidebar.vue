@@ -9,36 +9,17 @@
           <a-icon class="icon" type="dashboard" />
         </a-tooltip>
       </nuxt-link>
-      <nuxt-link to="/pms" class="SidebarList__Item">
+      <nuxt-link
+        :to="menu.name"
+        class="SidebarList__Item"
+        v-for="menu, index in showMenu"
+        @key="index"
+      >
         <a-tooltip placement="right">
           <template slot="title">
-            <span>商品</span>
+            <span>仪表盘</span>
           </template>
-          <a-icon class="icon" type="shopping" />
-        </a-tooltip>
-      </nuxt-link>
-      <nuxt-link to="/oms" class="SidebarList__Item">
-        <a-tooltip placement="right">
-          <template slot="title">
-            <span>订单</span>
-          </template>
-          <a-icon class="icon" type="container" />
-        </a-tooltip>
-      </nuxt-link>
-      <nuxt-link to="/" class="SidebarList__Item">
-        <a-tooltip placement="right">
-          <template slot="title">
-            <span>活动</span>
-          </template>
-          <a-icon class="icon" type="account-book" />
-        </a-tooltip>
-      </nuxt-link>
-      <nuxt-link to="/ums" class="SidebarList__Item">
-        <a-tooltip placement="right">
-          <template slot="title">
-            <span>权限</span>
-          </template>
-          <a-icon class="icon" type="audit" />
+          <a-icon class="icon" :type="menu.icon" />
         </a-tooltip>
       </nuxt-link>
       <nuxt-link to="/system" class="SidebarList__Item">
@@ -49,13 +30,36 @@
           <a-icon class="icon" type="control" />
         </a-tooltip>
       </nuxt-link>
-      
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapActions } from "Vuex";
+let menus = [
+  { name: "/pms", title: "商品", icon: "shopping" },
+  { name: "/oms", title: "订单", icon: "container" },
+  { name: "/ums", title: "权限", icon: "audit" }
+];
+export default {
+  data() {
+    return {};
+  },
+  computed: {
+    userMenu() {
+      return this.$store.state.User.menus;
+    },
+    showMenu() {
+      let temp = menus.filter(
+        item => this.userMenu.indexOf(item.name) > -1
+      );
+      return temp;
+    }
+  },
+  methods: {
+    ...mapActions({})
+  }
+};
 </script>
 
 <style lang="scss" scoped>

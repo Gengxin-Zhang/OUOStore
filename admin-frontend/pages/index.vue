@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="content">
-        <a-row :gutter="16" v-if="$route.hash===''">
+        <a-row :gutter="16" v-show="$route.hash===''">
           <a-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <card>
               <a-statistic slot="body" title="今日订单数" :value="1128" style="margin-right: 50px" />
@@ -44,17 +44,55 @@
             </card>
           </a-col>
         </a-row>
-        <div v-if="$route.hash==='' || $route.hash==='#todo'">
-          <card title="待处理"></card>
+        <div v-show="$route.hash==='' || $route.hash==='#todo'">
+          <card title="待处理">
+            <div slot="body">暂无</div>
+          </card>
         </div>
-        <div v-if="$route.hash==='' || $route.hash==='#order'">
-          <card title="订单统计"></card>
+        <div v-show="$route.hash==='' || $route.hash==='#order'">
+          <card title="订单统计">
+            <div slot="body">暂无</div>
+          </card>
         </div>
-        <div v-if="$route.hash==='' || $route.hash==='#seo'">
-          <card title="SEO"></card>
+        <div v-show="$route.hash==='' || $route.hash==='#seo'">
+          <card title="SEO">
+            <div slot="body">暂无</div>
+          </card>
         </div>
-        <div v-if="$route.hash==='' || $route.hash==='#system'">
-          <card title="系统运行"></card>
+        <div v-show="$route.hash==='' || $route.hash==='#system'">
+          <card title="系统运行">
+            <div slot="body">
+              <a-row :gutter="16">
+                <a-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
+                  <div class="infoCol">
+                    <span class="key">系统版本</span>
+                    <span>{{systemInfo.os}}</span>
+                  </div>
+                </a-col>
+                <a-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
+                  <div class="infoCol">
+                    <span class="key">CPU核心数</span>
+                    <span>{{systemInfo.cpuCoreCount}}</span>
+                  </div>
+                </a-col>
+                <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                  <div class="infoCol">
+                    <span class="key">启动时间</span>
+                    <span>{{systemInfo.startTime}}</span>
+                  </div>
+                </a-col>
+                <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+                  <div id="jvmGraph"></div>
+                </a-col>
+                <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+                  <div id="memoryGraph"></div>
+                </a-col>
+                <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+                  <div id="storeGraph"></div>
+                </a-col>
+              </a-row>
+            </div>
+          </card>
         </div>
       </div>
     </div>
@@ -64,6 +102,8 @@
 <script>
 import Logo from "~/components/Logo.vue";
 import card from "~/components/card.vue";
+import { mapActions } from "Vuex";
+import { Donut, Ring } from "@antv/g2plot";
 export default {
   components: {
     card
@@ -113,11 +153,91 @@ export default {
         //   path: "first",
         //   breadcrumbName: "first"
         // }
-      ]
+      ],
+      systemInfo: {},
+      jvmGraph: null
     };
   },
-  created() {},
-  mounted() {}
+  mounted() {
+    this.fetchSystemInfo();
+  },
+  methods: {
+    ...mapActions({ getSystemInfo: "Util/getSystemInfo" }),
+    fetchSystemInfo() {
+      this.getSystemInfo()
+        .then(res => {
+          console.log(res);
+          this.systemInfo = res;
+          const jvmData = [
+            {
+              type: "已使用",
+              value: Number.parseInt(res.jvmLeftMemory)
+            },
+            {
+              type: "未使用",
+              value: Number.parseInt(res.jvmMaxMemory - res.jvmLeftMemory)
+            }
+          ];
+          console.log(jvmData, document.getElementById("jvmGraph"));
+          this.jvmGraph = new Donut(document.getElementById("jvmGraph"), {
+            title: { visible: true, text: "JVM内存" },
+            forceFit: true,
+            radius: 1,
+            data: jvmData,
+            angleField: "value",
+            colorField: "type"
+          });
+          this.jvmGraph.render();
+          const menoryData = [
+            {
+              type: "已使用",
+              value: Number.parseInt(res.systemLeftMemory)
+            },
+            {
+              type: "未使用",
+              value: Number.parseInt(res.systemMaxMemory - res.systemLeftMemory)
+            }
+          ];
+          const memoryGraph = new Donut(
+            document.getElementById("memoryGraph"),
+            {
+              title: { visible: true, text: "系统内存" },
+              forceFit: true,
+              radius: 1,
+              data: menoryData,
+              angleField: "value",
+              colorField: "type"
+            }
+          );
+          memoryGraph.render();
+          const sotreData = [
+            {
+              type: "未使用",
+              value: Number.parseInt(res.systemLeftStore)
+            },
+            {
+              type: "已使用",
+              value: Number.parseInt(res.systemMaxStore - res.systemLeftStore)
+            }
+          ];
+          const storeGraph = new Donut(
+            document.getElementById("storeGraph"),
+            {
+              title: { visible: true, text: "存储空间" },
+              forceFit: true,
+              radius: 1,
+              data: sotreData,
+              angleField: "value",
+              colorField: "type"
+            }
+          );
+          storeGraph.render();
+        })
+        .catch(err => {
+          this.$message.error(err);
+        });
+    }
+  }
 };
 </script>
 
@@ -134,7 +254,7 @@ export default {
       position: absolute;
       width: 20%;
       // padding: 1rem 1rem;
-      max-height: 100vh;
+      // max-height: 100vh;
       overflow: auto;
       z-index: 1;
       .sideList {
@@ -167,10 +287,21 @@ export default {
     }
     .content {
       width: 100%;
-      max-height: 100vh;
+      // max-height: 100vh;
       overflow: auto;
       position: relative;
       padding: 0 1rem 1rem calc(20vw + 1rem);
+      .infoCol {
+        margin: 0.2rem 0;
+        .key {
+          font-size: 0.8rem;
+          color: #999;
+          margin-right: 0.5rem;
+          &::after {
+            content: ":";
+          }
+        }
+      }
     }
   }
 }
