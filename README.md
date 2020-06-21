@@ -15,7 +15,7 @@
 项目演示地址： [http://39.97.237.153/admin/index.html](http://39.97.237.153/admin/index.html)  
 
 ![后台管理系统功能演示.jpg](/images/admin.jpg)
-![后台管理系统功能演示.png](/images/user.jpg)
+![后台管理系统功能演示.png](/images/user.png)
 
 #### 前台商城系统
 
